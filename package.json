@@ -16,7 +16,9 @@
     "test:geometry": "node tests/geometry-ui.cjs",
     "test:session": "node tests/session-ui.cjs",
     "test:package": "node tests/package.cjs",
-    "assets:local": "node scripts/import-local-assets.cjs"
+    "assets:local": "node scripts/import-local-assets.cjs",
+    "test:packaged": "node tests/packaged.cjs",
+    "test:regressions": "node tests/audit-regressions.cjs"
   },
   "devDependencies": {
     "@electron/packager": "20.3.0",

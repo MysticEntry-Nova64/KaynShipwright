@@ -3,7 +3,8 @@ import type {Project,Point} from './core';
 import {previewPNG} from './preview';
 import {edit,addEngine,copyEngine,rectangleBounds,insertVertex} from './geometry';
 import type {Selection} from './geometry';
-interface Host {invalidate:()=>void;svg:SVGSVGElement;get:()=>Project;set:(p:Project)=>void;commit:()=>void;draw:()=>void;render:()=>void;status:(s:string)=>void;save:(name:string,text:string)=>Promise<boolean>}
+import type {GestureController} from './gesture';
+interface Host {gestures:GestureController;invalidate:()=>void;svg:SVGSVGElement;get:()=>Project;set:(p:Project)=>void;commit:()=>void;draw:()=>void;render:()=>void;status:(s:string)=>void;save:(name:string,text:string)=>Promise<boolean>}
 const NS='http://www.w3.org/2000/svg';
 export function installGeometry(host:Host){
  const $=(id:string)=>document.getElementById(id)!;
@@ -49,7 +50,7 @@ export function installGeometry(host:Host){
    }
   }
  }
- function perform(change:(p:Project)=>void){try{host.set(edit(host.get(),change));host.commit();}catch(e){host.status(`Edit rejected: ${e}`);host.render();}}
+ function perform(change:(p:Project)=>void){try{host.gestures.finish();host.set(edit(host.get(),change));host.commit();}catch(e){host.status(`Edit rejected: ${e}`);host.render();}}
  function render(){
   if(!host.get())return;
   $('geometryInspector').hidden=mode()==='weapons';$('weaponInspector').hidden=mode()!=='weapons';
@@ -78,15 +79,15 @@ export function installGeometry(host:Host){
  }
  host.svg.addEventListener('pointerdown',event=>{
   if(mode()==='weapons')return;event.stopImmediatePropagation();menu.hidden=true;
-  if(event.button!==0)return;host.invalidate();
+  if(event.button!==0)return;host.gestures.cancel();host.invalidate();
   const target=event.target as Element,s=getSelection(target);selection=s;render();
   if(!s){host.draw();return;}
   const specific=target.closest('[data-geometry]')!.getAttribute('data-geometry')!;
   drag={selection:s,before:clone(host.get()),start:screenPoint(event),moved:false};
-  host.svg.dataset.dragKind=specific;host.svg.setPointerCapture(event.pointerId);host.draw();
+  host.svg.dataset.dragKind=specific;host.gestures.begin(event.pointerId,end);host.draw();
  },true);
  host.svg.addEventListener('pointermove',event=>{
-  if(!drag)return;event.stopImmediatePropagation();const q=screenPoint(event),s=drag.selection,before=drag.before;
+  if(!drag||!host.gestures.owns(event.pointerId))return;event.stopImmediatePropagation();const q=screenPoint(event),s=drag.selection,before=drag.before;
   if(Math.hypot(q[0]-drag.start[0],q[1]-drag.start[1])<.1)return;
   drag.moved=true;const p=clone(before),h=p.hull,kind=host.svg.dataset.dragKind;
   if(s.kind==='engine'){
@@ -105,11 +106,8 @@ export function installGeometry(host:Host){
   if(cancel||errors.length){host.set(saved.before);host.render();if(errors.length&&!cancel)host.status(`Edit rejected: ${errors.join(' ')}`);}
   else if(saved.moved)host.commit();else host.render();
  }
- host.svg.addEventListener('pointerup',event=>{if(drag){event.stopImmediatePropagation();end(false);}},true);
- host.svg.addEventListener('pointercancel',event=>{if(drag){event.stopImmediatePropagation();end(true);}},true);
- host.svg.addEventListener('lostpointercapture',()=>{if(drag)end(true);});
  host.svg.addEventListener('contextmenu',event=>{
-  event.preventDefault();if(drag)end(true);const p=host.get(),q=toGame(p,screenPoint(event)).map(round) as Point;
+  event.preventDefault();host.gestures.cancel();const p=host.get(),q=toGame(p,screenPoint(event)).map(round) as Point;
   selection=getSelection(event.target as Element);render();host.draw();menu.replaceChildren();
   function action(title:string,fn:()=>void){const b=document.createElement('button');b.type='button';b.role='menuitem';b.textContent=title;b.setAttribute('aria-label',title);b.onclick=()=>{menu.hidden=true;fn();};menu.append(b);}
   const heading=document.createElement('div');heading.className='menu-heading';heading.textContent='Active tool';menu.append(heading);
@@ -144,10 +142,10 @@ export function installGeometry(host:Host){
  });
  document.addEventListener('pointerdown',e=>{if(!menu.contains(e.target as Node))menu.hidden=true;});
  menu.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.hidden=true;input('editTool').focus();}if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const buttons=Array.from(menu.querySelectorAll('button')),i=buttons.indexOf(document.activeElement as HTMLButtonElement);buttons[(i+(e.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length]?.focus();}});
- input('editTool').addEventListener('change',()=>{if(drag)end(true);selection=null;menu.hidden=true;host.render();});
- window.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.hidden=true;if(drag)end(true);}});
+ input('editTool').addEventListener('change',()=>{host.gestures.cancel();selection=null;menu.hidden=true;host.render();});
+ window.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.hidden=true;}});
  $('exportPackage').addEventListener('click',()=>{void (async()=>{
-  const snapshot=clone(host.get()),errors=validate(snapshot).errors;if(errors.length)throw Error(errors.join('\n'));
+  host.gestures.finish();const snapshot=clone(host.get()),errors=validate(snapshot).errors;if(errors.length)throw Error(errors.join('\n'));
   if(!window.desktop?.exportPackage)throw Error('Open the desktop app to export a design package.');
   const result=await window.desktop.exportPackage(snapshot,await previewPNG(snapshot));
   host.status(result?`Design package exported: ${result}`:'Package export canceled.');

@@ -7,5 +7,6 @@ export class DocumentSession {
  beginLoad(){return {generation:++this.generation,document:this.document,revision:this.revision};}
  accepts(ticket:{generation:number;document:number;revision:number}){return ticket.generation===this.generation&&ticket.document===this.document&&ticket.revision===this.revision;}
  beginSave(){return {document:this.document,revision:this.revision};}
- finishSave(ticket:{document:number;revision:number}){if(ticket.document===this.document&&ticket.revision>=this.saved)this.saved=ticket.revision;}
+ // The renderer serializes saves. Undo revisions are not save-operation order.
+ finishSave(ticket:{document:number;revision:number}){if(ticket.document===this.document)this.saved=ticket.revision;}
 }

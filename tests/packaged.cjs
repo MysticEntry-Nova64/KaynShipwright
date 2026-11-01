@@ -1,2 +1,25 @@
-const {_electron:electron}=require('playwright');const path=require('node:path'),fs=require('node:fs/promises'),assert=require('node:assert/strict');
-(async()=>{const root=path.resolve(__dirname,'..'),env={...process.env};delete env.ELECTRON_RUN_AS_NODE;const app=await electron.launch({executablePath:path.join(root,'release-v0.1.4','Kayn Shipwright-win32-x64','Kayn Shipwright.exe'),env});const page=await app.firstWindow();page.setDefaultTimeout(10000);const errors=[];page.on('pageerror',e=>errors.push(String(e)));try{await page.locator('#count').filter({hasText:'23'}).waitFor();assert.equal(await page.locator('[data-slot]').count(),23);await page.locator('#compareScale').click();await page.locator('[data-reference="1"]').waitFor();assert.equal(await page.locator('[data-reference]').count(),1);await page.locator('#referenceClass').selectOption('CAPITAL_SHIP');assert.match(await page.locator('#comparisonRatio').textContent(),/Onslaught/);await page.locator('#closeComparison').click();await page.locator('#mountList button').filter({hasText:'ME01'}).click();await page.screenshot({path:path.join(root,'test-results','packaged-editor.png')});await page.locator('#name').fill('Unsaved test');await page.locator('#name').press('Tab');await app.evaluate(({BrowserWindow,dialog})=>{dialog.showMessageBoxSync=()=>0;BrowserWindow.getAllWindows()[0].close();});assert.equal(await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().length),1);assert.deepEqual(errors,[]);await fs.writeFile(path.join(root,'test-results','packaged.json'),JSON.stringify({passed:true,mounts:23,unsavedCloseCancelled:true,consoleErrors:errors},null,2));console.log('Packaged executable launches with 23 mounts; unsaved-close protection works.');}finally{await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().forEach(w=>w.destroy()));await app.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
+const {_electron:electron}=require('playwright');
+const path=require('node:path'),fs=require('node:fs/promises'),assert=require('node:assert/strict');
+(async()=>{
+ const root=path.resolve(__dirname,'..'),env={...process.env};delete env.ELECTRON_RUN_AS_NODE;
+ const executable=process.env.SHIPWRIGHT_EXECUTABLE;
+ if(!executable||!path.isAbsolute(executable))throw Error('Set SHIPWRIGHT_EXECUTABLE to the absolute packaged executable path.');
+ await fs.access(executable);
+ const expectedVersion=process.env.SHIPWRIGHT_EXPECTED_VERSION||require('../package.json').version;
+ const app=await electron.launch({executablePath:executable,env});
+ try{
+  assert.equal(await app.evaluate(({app})=>app.getVersion()),expectedVersion,'packaged application version');
+  const page=await app.firstWindow(),errors=[];page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(String(e)));
+  await fs.mkdir(path.join(root,'test-results'),{recursive:true});
+  await page.locator('#count').filter({hasText:'23'}).waitFor();assert.equal(await page.locator('[data-slot]').count(),23);
+  await page.locator('#compareScale').click();await page.locator('[data-reference="1"]').waitFor();assert.equal(await page.locator('[data-reference]').count(),1);
+  await page.locator('#referenceClass').selectOption('CAPITAL_SHIP');assert.match(await page.locator('#comparisonRatio').textContent(),/Onslaught/);
+  await page.locator('#closeComparison').click();await page.locator('#mountList button').filter({hasText:'ME01'}).click();
+  await page.screenshot({path:path.join(root,'test-results','packaged-editor.png')});
+  await page.locator('#name').fill('Unsaved test');await page.locator('#name').press('Tab');
+  await app.evaluate(({BrowserWindow,dialog})=>{dialog.showMessageBoxSync=()=>0;BrowserWindow.getAllWindows()[0].close();});
+  assert.equal(await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().length),1);assert.deepEqual(errors,[]);
+  await fs.writeFile(path.join(root,'test-results','packaged.json'),JSON.stringify({passed:true,executable,version:expectedVersion,mounts:23,unsavedCloseCancelled:true,consoleErrors:errors},null,2));
+  console.log('Packaged executable launches with 23 mounts; unsaved-close protection works.');
+ }finally{await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().forEach(w=>w.destroy()));await app.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

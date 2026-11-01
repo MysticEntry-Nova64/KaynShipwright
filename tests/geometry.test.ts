@@ -17,5 +17,11 @@ test('polygon rejects crossing, repeated, degenerate and overlapping edges',()=>
  assert.deepEqual(outlineErrors([]),[]);assert.deepEqual(outlineErrors([0,0,4,0,4,4,2,2,0,4]),[]);
 });
 test('rectangle, projected insertion, and coordinate inverse on all quadrants',()=>{const p=make();rectangleBounds(p);const before=p.hull.bounds.length;const index=insertVertex(p,[0,200]);assert.equal(p.hull.bounds.length,before+2);assert.equal(p.hull.bounds[index*2+1],120);assert.equal(validate(p).errors.length,0);for(const q of [[0,0],[-40,10],[20,-30],[-10,-20],[80,90]] as [number,number][])assert.deepEqual(toGame(p,toScreen(p,q)),q);});
-test('save tickets never clear newer edits, another document, or regress completed saves',()=>{const s=new DocumentSession();s.load();s.change();const old=s.beginSave();s.change();s.finishSave(old);assert.equal(s.dirty,true);const current=s.beginSave();s.finishSave(current);s.finishSave(old);assert.equal(s.dirty,false);s.load(true);s.finishSave(current);assert.equal(s.dirty,true);});
+test('serialized saves own their exact snapshot, including an older undo revision',()=>{
+ const s=new DocumentSession();s.load();s.change();const a=s.beginSave();s.finishSave(a);
+ s.change();const b=s.beginSave();s.finishSave(b);s.restore(a.revision);assert.equal(s.dirty,true);
+ s.finishSave(s.beginSave());assert.equal(s.dirty,false);s.restore(b.revision);assert.equal(s.dirty,true);
+ const current=s.beginSave();s.change();s.finishSave(current);assert.equal(s.dirty,true);
+ s.load(true);s.finishSave(current);assert.equal(s.dirty,true);
+});
 test('only latest load generation with no intervening edit may publish',()=>{const s=new DocumentSession();s.load();const first=s.beginLoad(),last=s.beginLoad();assert.equal(s.accepts(first),false);assert.equal(s.accepts(last),true);s.change();assert.equal(s.accepts(last),false);const t=s.beginLoad();s.load();assert.equal(s.accepts(t),false);});

@@ -37,10 +37,25 @@ npm run test:session
 npm run test:package
 npm run test:classes
 npm run test:references
+npm run test:regressions
 npm run package
 ```
 
 Run the geometry workflow before session/package checks because they use its generated fixture. Tests write ignored artifacts under `test-results/`. Packaging creates a portable Windows app under `release-v1.0.2/`. Generated bundles, dependencies, binaries, local PNG assets and test outputs are excluded from this source repository.
+
+Test a specific packaged executable from PowerShell (no old release is selected implicitly):
+
+```powershell
+$env:SHIPWRIGHT_EXECUTABLE = (Resolve-Path 'release-v1.0.2/Kayn Shipwright-win32-x64/Kayn Shipwright.exe').Path
+npm run test:packaged
+npm run test:regressions
+npm run test:geometry
+Remove-Item Env:SHIPWRIGHT_EXECUTABLE
+```
+
+The packaged smoke test requires an absolute executable path and checks its running version against `package.json` (or an explicit `SHIPWRIGHT_EXPECTED_VERSION`). The regressions also support the selected executable; otherwise they launch the source build.
+
+Saving or exporting completes an active drag before taking the snapshot. Escape, pointer cancellation, capture loss and tool switching cancel it without adding history. Undo completes then reverses the drag. Successful serialized saves record their exact revision even after undo. Native project/standalone hull saves write and read back an owned sibling temporary file before replacing the destination. Write/readback/replacement failure leaves the prior destination intact; cleanup failures are reported with the retained temporary location. This does not promise power-loss durability.
 
 ## Handoff workflow and limits
 
