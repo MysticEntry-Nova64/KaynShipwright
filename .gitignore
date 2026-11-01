@@ -1,0 +1,10 @@
+node_modules/
+release*/
+test-results/
+work/
+app.js
+core-node.cjs
+assets/*.png
+.env
+.env.*
+*.log

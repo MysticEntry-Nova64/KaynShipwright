@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Talon",
+    "hullSize": "FIGHTER",
+    "width": 24,
+    "height": 24,
+    "image": "assets/talon-reference.png"
+  },
+  {
+    "name": "Lasher",
+    "hullSize": "FRIGATE",
+    "width": 68,
+    "height": 96,
+    "image": "assets/lasher-reference.png"
+  },
+  {
+    "name": "Hammerhead",
+    "hullSize": "DESTROYER",
+    "width": 108,
+    "height": 164,
+    "image": "assets/hammerhead-reference.png"
+  },
+  {
+    "name": "Eagle",
+    "hullSize": "CRUISER",
+    "width": 168,
+    "height": 218,
+    "image": "assets/eagle-reference.png"
+  },
+  {
+    "name": "Onslaught",
+    "hullSize": "CAPITAL_SHIP",
+    "width": 288,
+    "height": 384,
+    "image": "assets/onslaught-reference.png"
+  }
+]

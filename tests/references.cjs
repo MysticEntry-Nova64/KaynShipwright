@@ -1,0 +1,18 @@
+const {_electron:electron}=require('playwright');
+const assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs/promises');
+(async()=>{const root=path.resolve(__dirname,'..'),env={...process.env};delete env.ELECTRON_RUN_AS_NODE;
+const app=await electron.launch({args:[root],env});const page=await app.firstWindow();page.setDefaultTimeout(5000);const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+try{await page.locator('#count').filter({hasText:'23'}).waitFor();
+assert.equal(await page.locator('#comparisonDialog').isVisible(),false);
+await page.locator('#compareScale').click();await page.locator('[data-reference="1"]').waitFor();
+const one=page.locator('[data-reference="1"]'),ship=page.locator('[data-current-ship]');
+const a=await one.boundingBox(),c=await ship.boundingBox();assert.equal(await page.locator('[data-reference]').count(),1);assert.ok(Math.abs(c.height/a.height-360/164)<.01);
+await page.locator('#closeComparison').click();await page.locator('#scale').fill('2');await page.locator('#resize').click();await page.locator('#compareScale').click();
+const scaledShip=await ship.boundingBox(),original=await one.boundingBox();assert.ok(Math.abs(scaledShip.height/original.height-720/164)<.01);
+assert.match(await page.locator('#comparisonRatio').textContent(),/4.39/);
+await page.locator('#closeComparison').click();await page.locator('#undo').click();await page.locator('#zoomIn').click();await page.locator('#compareScale').click();
+const zship=await ship.boundingBox(),zref=await one.boundingBox();assert.ok(Math.abs(zship.height/zref.height-360/164)<.01);
+await page.screenshot({path:path.join(root,'test-results','scale-comparison.png')});await page.keyboard.press('Escape');assert.equal(await page.locator('#comparisonDialog').isVisible(),false);
+assert.equal(await page.locator('[data-slot]').count(),23);assert.deepEqual(errors,[]);console.log('Comparison: closed by default, shared scale, single original reference, project resize, zoom independence and Escape passed.');
+await fs.writeFile(path.join(root,'test-results','references.json'),JSON.stringify({passed:true,reference:'Vanilla Hammerhead',width:108,height:164,checks:['closed by default','shared scale','single original reference','project resize','zoom independent','Escape closes','mounts unchanged']},null,2));
+}finally{await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().forEach(w=>w.destroy()));await app.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

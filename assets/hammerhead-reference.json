@@ -1,0 +1,8 @@
+{
+  "name": "Hammerhead",
+  "hullSize": "DESTROYER",
+  "width": 108,
+  "height": 164,
+  "source": "Starsector 0.98a-RC8 vanilla hammerhead.ship",
+  "image": "assets/hammerhead-reference.png"
+}

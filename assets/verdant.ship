@@ -1,0 +1,373 @@
+{
+  "hullId": "kayn_verdant",
+  "hullName": "Verdant",
+  "hullSize": "DESTROYER",
+  "style": "HIGH_TECH",
+  "width": 240.0,
+  "height": 360.0,
+  "center": [
+    120.0,
+    180.0
+  ],
+  "spriteName": "graphics/ships/kayn_verdant.png",
+  "collisionRadius": 175.0,
+  "viewOffset": 0.0,
+  "shieldCenter": [
+    18.75,
+    0.0
+  ],
+  "shieldRadius": 180.0,
+  "coversColor": "88,104,74,255",
+  "bounds": [
+    -174.8438,
+    0.0,
+    -157.735,
+    12.6562,
+    -156.5625,
+    20.86,
+    -127.265,
+    27.6562,
+    -95.625,
+    54.8438,
+    -55.7812,
+    71.015,
+    -20.625,
+    70.3125,
+    9.8438,
+    51.7975,
+    56.7188,
+    43.36,
+    108.2812,
+    35.1562,
+    148.125,
+    20.1562,
+    168.0475,
+    8.9062,
+    171.5625,
+    0.0,
+    168.0475,
+    -9.14,
+    148.125,
+    -20.625,
+    108.2812,
+    -35.625,
+    56.7188,
+    -43.8275,
+    9.8438,
+    -51.7975,
+    -20.625,
+    -70.3125,
+    -55.7812,
+    -70.7812,
+    -95.625,
+    -54.8438,
+    -127.265,
+    -27.6562,
+    -156.5625,
+    -20.625,
+    -157.735,
+    -12.1875
+  ],
+  "weaponSlots": [
+    {
+      "id": "LE01",
+      "locations": [
+        17.3438,
+        0.0
+      ],
+      "type": "ENERGY",
+      "size": "LARGE",
+      "mount": "HARDPOINT",
+      "angle": 0,
+      "arc": 10
+    },
+    {
+      "id": "ME01",
+      "locations": [
+        -35.0,
+        -56.0
+      ],
+      "type": "ENERGY",
+      "size": "MEDIUM",
+      "mount": "TURRET",
+      "angle": 0,
+      "arc": 240
+    },
+    {
+      "id": "ME02",
+      "locations": [
+        -35.0,
+        56.0
+      ],
+      "type": "ENERGY",
+      "size": "MEDIUM",
+      "mount": "TURRET",
+      "angle": 0,
+      "arc": 240
+    },
+    {
+      "id": "ME05",
+      "locations": [
+        78.515,
+        -13.36
+      ],
+      "type": "ENERGY",
+      "size": "MEDIUM",
+      "mount": "TURRET",
+      "angle": 0,
+      "arc": 240
+    },
+    {
+      "id": "ME06",
+      "locations": [
+        78.515,
+        13.125
+      ],
+      "type": "ENERGY",
+      "size": "MEDIUM",
+      "mount": "TURRET",
+      "angle": 0,
+      "arc": 240
+    },
+    {
+      "id": "SS01",
+      "locations": [
+        37.0312,
+        -31.4062
+      ],
+      "type": "SYNERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": -90,
+      "arc": 240
+    },
+    {
+      "id": "SS02",
+      "locations": [
+        37.0312,
+        31.64
+      ],
+      "type": "SYNERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 90,
+      "arc": 240
+    },
+    {
+      "id": "SS03",
+      "locations": [
+        157.9688,
+        -9.61
+      ],
+      "type": "SYNERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": -90,
+      "arc": 240
+    },
+    {
+      "id": "SS04",
+      "locations": [
+        157.9688,
+        9.8438
+      ],
+      "type": "SYNERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 90,
+      "arc": 240
+    },
+    {
+      "id": "SE01",
+      "locations": [
+        -116.7188,
+        -1.875
+      ],
+      "type": "ENERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 180,
+      "arc": 300
+    },
+    {
+      "id": "SE02",
+      "locations": [
+        -116.7188,
+        2.3438
+      ],
+      "type": "ENERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 180,
+      "arc": 300
+    },
+    {
+      "id": "SE03",
+      "locations": [
+        -95.39,
+        -2.3438
+      ],
+      "type": "ENERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 180,
+      "arc": 300
+    },
+    {
+      "id": "SE04",
+      "locations": [
+        -95.39,
+        2.8125
+      ],
+      "type": "ENERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 180,
+      "arc": 300
+    },
+    {
+      "id": "SE05",
+      "locations": [
+        -82.735,
+        -23.6725
+      ],
+      "type": "ENERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 180,
+      "arc": 300
+    },
+    {
+      "id": "SE06",
+      "locations": [
+        -82.735,
+        24.375
+      ],
+      "type": "ENERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 180,
+      "arc": 300
+    },
+    {
+      "id": "SE07",
+      "locations": [
+        -73.8275,
+        -23.9062
+      ],
+      "type": "ENERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 180,
+      "arc": 300
+    },
+    {
+      "id": "SE08",
+      "locations": [
+        -73.8275,
+        24.8438
+      ],
+      "type": "ENERGY",
+      "size": "SMALL",
+      "mount": "TURRET",
+      "angle": 180,
+      "arc": 300
+    },
+    {
+      "id": "UY01",
+      "locations": [
+        105.9375,
+        -17.11
+      ],
+      "type": "UNIVERSAL",
+      "size": "MEDIUM",
+      "mount": "HARDPOINT",
+      "angle": -90,
+      "arc": 90
+    },
+    {
+      "id": "UY02",
+      "locations": [
+        105.9375,
+        17.8125
+      ],
+      "type": "UNIVERSAL",
+      "size": "MEDIUM",
+      "mount": "HARDPOINT",
+      "angle": 90,
+      "arc": 90
+    },
+    {
+      "id": "UB01",
+      "locations": [
+        138.2812,
+        -14.2975
+      ],
+      "type": "UNIVERSAL",
+      "size": "MEDIUM",
+      "mount": "HARDPOINT",
+      "angle": 0,
+      "arc": 10
+    },
+    {
+      "id": "UB02",
+      "locations": [
+        138.2812,
+        14.2975
+      ],
+      "type": "UNIVERSAL",
+      "size": "MEDIUM",
+      "mount": "HARDPOINT",
+      "angle": 0,
+      "arc": 10
+    },
+    {
+      "id": "UB03",
+      "locations": [
+        146.25,
+        -12.6562
+      ],
+      "type": "UNIVERSAL",
+      "size": "MEDIUM",
+      "mount": "HARDPOINT",
+      "angle": 0,
+      "arc": 10
+    },
+    {
+      "id": "UB04",
+      "locations": [
+        146.25,
+        12.6562
+      ],
+      "type": "UNIVERSAL",
+      "size": "MEDIUM",
+      "mount": "HARDPOINT",
+      "angle": 0,
+      "arc": 10
+    }
+  ],
+  "engineSlots": [
+    {
+      "location": [
+        -141.0938,
+        -18.0475
+      ],
+      "angle": 180,
+      "width": 8.75,
+      "length": 50.0,
+      "contrailSize": 35.0,
+      "style": "HIGH_TECH"
+    },
+    {
+      "location": [
+        -141.0938,
+        18.0475
+      ],
+      "angle": 180,
+      "width": 8.75,
+      "length": 50.0,
+      "contrailSize": 35.0,
+      "style": "HIGH_TECH"
+    }
+  ]
+}

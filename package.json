@@ -1,0 +1,33 @@
+{
+  "name": "kayn-shipwright",
+  "productName": "Kayn Shipwright",
+  "version": "1.0.2",
+  "private": true,
+  "description": "Offline Starsector ship layout editor",
+  "main": "main.cjs",
+  "scripts": {
+    "build": "tsc --noEmit && node build.mjs",
+    "start": "npm run build && electron .",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:ui": "node tests/ui.cjs",
+    "package": "npm run build && electron-packager . \"Kayn Shipwright\" --platform=win32 --arch=x64 --out=release-v1.0.2 --overwrite --ignore=\"^/(release|tests|src|node_modules|work|test-results)\"",
+    "test:references": "node tests/references.cjs",
+    "test:classes": "node tests/classes.cjs",
+    "test:geometry": "node tests/geometry-ui.cjs",
+    "test:session": "node tests/session-ui.cjs",
+    "test:package": "node tests/package.cjs",
+    "assets:local": "node scripts/import-local-assets.cjs"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "electron": "45.2.1",
+    "esbuild": "0.28.2",
+    "playwright": "1.64.1",
+    "typescript": "7.0.2"
+  },
+  "type": "module",
+  "overrides": {
+    "glob": "14.0.3",
+    "minimatch": "11.0.3"
+  }
+}
