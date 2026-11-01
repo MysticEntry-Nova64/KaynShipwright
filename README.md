@@ -2,6 +2,27 @@
 
 Version **1.0.2**. Offline Electron/TypeScript Starsector hull-layout editor for Windows.
 
+Import a ship sprite, arrange weapon mounts, edit engines/shields/collision geometry, and export an editable design package for integration into your mod.
+
+![Kayn Shipwright showing a selected weapon mount, its firing arc, and exact mount properties.](docs/images/weapon-editor.png)
+
+**Weapon layout:** drag mounts and aiming/arc handles, or enter exact coordinates and properties in the inspector.
+
+<details>
+<summary>See engine editing and geometry tools</summary>
+
+![Engine editing with position, exhaust direction, width, length, contrail size and style controls.](docs/images/engine-editor.png)
+
+**Engines:** move an engine, adjust its exhaust and width using canvas handles, or edit its numeric settings.
+
+![Collision vertices, shield and collision-radius circles, with the right-click menu listing all four editing tools.](docs/images/geometry-tools.png)
+
+**Geometry and tool switching:** edit collision vertices and shield geometry; right-click anywhere on the canvas to switch between Weapons, Shield, Engines and Collision bounds.
+
+</details>
+
+Screenshots show the actual Windows app with original demonstration artwork. The demo illustrates the editing workflow; it is not a game-verified ship or bundled game sprite.
+
 ## Features
 
 Right-click anywhere on the canvas to choose **Weapons**, **Shield**, **Engines** or **Collision bounds**. The active tool is marked and its editing actions appear below. Tool switching does not add geometry. The sidebar selector stays synchronized.
@@ -24,7 +45,7 @@ npm run build
 npm start
 ```
 
-The PNG artwork is deliberately excluded from Git. Supply your authorized local assets from an existing Shipwright installation/source folder. Six required files: `verdant.png`, `talon-reference.png`, `lasher-reference.png`, `hammerhead-reference.png`, `eagle-reference.png`, `onslaught-reference.png`. `assets/class-references.json` contains display dimensions and file names; `assets/verdant.ship` is the example layout fixture. Sprite redistribution rights are not granted by this source upload. Local sprite assets are required for the startup example and UI checks; class comparisons require their local reference images.
+The local game/reference sprite PNGs are deliberately excluded from Git. Supply your authorized local assets from an existing Shipwright installation/source folder. Six required files: `verdant.png`, `talon-reference.png`, `lasher-reference.png`, `hammerhead-reference.png`, `eagle-reference.png`, `onslaught-reference.png`. `assets/class-references.json` contains display dimensions and file names; `assets/verdant.ship` is the example layout fixture. Sprite redistribution rights are not granted by this source upload. Local sprite assets are required for the startup example and UI checks; class comparisons require their local reference images.
 
 ## Build and checks
 
