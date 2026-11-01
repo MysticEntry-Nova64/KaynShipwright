@@ -1,7 +1,7 @@
 const {_electron:electron}=require('playwright');
 const assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs/promises');
 (async()=>{const root=path.resolve(__dirname,'..'),env={...process.env};delete env.ELECTRON_RUN_AS_NODE;
-const app=await electron.launch({args:[root],env});const page=await app.firstWindow();page.setDefaultTimeout(5000);const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+const app=await electron.launch(process.env.SHIPWRIGHT_EXECUTABLE?{executablePath:process.env.SHIPWRIGHT_EXECUTABLE,args:[],env}:{args:[root],env});const page=await app.firstWindow();page.setDefaultTimeout(5000);const errors=[];page.on('pageerror',e=>errors.push(String(e)));
 try{await page.locator('#count').filter({hasText:'23'}).waitFor();
 assert.equal(await page.locator('#comparisonDialog').isVisible(),false);
 await page.locator('#compareScale').click();await page.locator('[data-reference="1"]').waitFor();

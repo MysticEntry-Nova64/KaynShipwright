@@ -11,7 +11,8 @@ export function outlineErrors(bounds:number[]):string[]{
  if(!bounds.length)return [];
  if(bounds.length<6)return ['bounds: use at least three vertices, or an empty outline.'];
  const pts:Point[]=[];for(let i=0;i<bounds.length;i+=2)pts.push([bounds[i],bounds[i+1]]);
- const cross=(a:Point,b:Point,c:Point)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
+ let overflow=false;
+ const cross=(a:Point,b:Point,c:Point)=>{const value=(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);if(!Number.isFinite(value))overflow=true;return value;};
  const on=(a:Point,b:Point,c:Point)=>Math.abs(cross(a,b,c))<1e-8&&c[0]>=Math.min(a[0],b[0])-1e-8&&c[0]<=Math.max(a[0],b[0])+1e-8&&c[1]>=Math.min(a[1],b[1])-1e-8&&c[1]<=Math.max(a[1],b[1])+1e-8;
  for(let i=0;i<pts.length;i++){
   const a=pts[i],b=pts[(i+1)%pts.length];
@@ -25,6 +26,7 @@ export function outlineErrors(bounds:number[]):string[]{
   }
  }
  const area=pts.reduce((sum,a,i)=>{const b=pts[(i+1)%pts.length];return sum+a[0]*b[1]-b[0]*a[1];},0);
+ if(overflow||!Number.isFinite(area))return ['bounds: outline arithmetic overflow.'];
  return Math.abs(area)<1e-6?['bounds: outline has no area.']:[];
 }
 export function addEngine(p:Project,location:Point){p.hull.engineSlots.push({location,angle:180,width:10,length:40,contrailSize:20,style:'HIGH_TECH'});}

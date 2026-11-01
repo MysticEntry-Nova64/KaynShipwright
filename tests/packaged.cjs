@@ -11,7 +11,7 @@ const path=require('node:path'),fs=require('node:fs/promises'),assert=require('n
   assert.equal(await app.evaluate(({app})=>app.getVersion()),expectedVersion,'packaged application version');
   const page=await app.firstWindow(),errors=[];page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(String(e)));
   await fs.mkdir(path.join(root,'test-results'),{recursive:true});
-  await page.locator('#count').filter({hasText:'23'}).waitFor();assert.equal(await page.locator('[data-slot]').count(),23);
+  await page.locator('#count').filter({hasText:'23'}).waitFor();assert.equal(await page.locator('h1 small').textContent(),'V'+expectedVersion);assert.equal(await page.title(),'Kayn Shipwright V'+expectedVersion);assert.equal(await page.locator('[data-slot]').count(),23);
   await page.locator('#compareScale').click();await page.locator('[data-reference="1"]').waitFor();assert.equal(await page.locator('[data-reference]').count(),1);
   await page.locator('#referenceClass').selectOption('CAPITAL_SHIP');assert.match(await page.locator('#comparisonRatio').textContent(),/Onslaught/);
   await page.locator('#closeComparison').click();await page.locator('#mountList button').filter({hasText:'ME01'}).click();

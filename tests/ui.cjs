@@ -3,11 +3,12 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
 (async()=>{
  const root=path.resolve(__dirname,'..');await fs.mkdir(path.join(root,'test-results'),{recursive:true});
  const env={...process.env};delete env.ELECTRON_RUN_AS_NODE;
- const app=await electron.launch({args:[root],env});
+ const app=await electron.launch(process.env.SHIPWRIGHT_EXECUTABLE?{executablePath:process.env.SHIPWRIGHT_EXECUTABLE,args:[],env}:{args:[root],env});
  const page=await app.firstWindow(),errors=[];page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(['error','warning'].includes(m.type()))errors.push(m.text());});
  page.on('dialog',d=>d.accept());
+ let attemptedGesture=null;
  try{
- await page.locator('#count').filter({hasText:'23'}).waitFor();
+ await page.bringToFront();await page.locator('#count').filter({hasText:'23'}).waitFor();
  assert.equal(await page.locator('[data-slot]').count(),23);
  await page.locator('[data-slot="ME01"] > circle').click();
  await page.locator('#arc').fill('180');await page.locator('#arc').press('Tab');assert.equal(await page.locator('#arc').inputValue(),'180');
@@ -15,8 +16,8 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
  await page.locator('#redo').click();assert.equal(await page.locator('#arc').inputValue(),'180');
  const marker=await page.locator('[data-slot="ME01"] > circle').boundingBox();const before=Number(await page.locator('#forward').inputValue());
  await page.mouse.move(marker.x+marker.width/2,marker.y+marker.height/2);await page.mouse.down();await page.mouse.move(marker.x+23,marker.y-17,{steps:8});await page.mouse.up();assert.notEqual(Number(await page.locator('#forward').inputValue()),before);
- const aim=await page.locator('[data-handle="aim"]').boundingBox();await page.mouse.move(aim.x+aim.width/2,aim.y+aim.height/2);await page.mouse.down();await page.mouse.move(aim.x+40,aim.y+20,{steps:5});await page.mouse.up();assert.notEqual(Number(await page.locator('#angle').inputValue()),0);
- const arc=await page.locator('[data-handle="arc"]').boundingBox();await page.mouse.move(arc.x+arc.width/2,arc.y+arc.height/2);await page.mouse.down();await page.mouse.move(arc.x+25,arc.y+20,{steps:5});await page.mouse.up();assert.notEqual(Number(await page.locator('#arc').inputValue()),180);
+ await page.locator('[data-handle="aim"]').hover();const aim=await page.locator('[data-handle="aim"]').boundingBox();attemptedGesture={kind:'aim',box:aim,expected:'Direction changes from 0 after a committed aim drag'};assert.equal(await page.evaluate(([x,y])=>document.elementFromPoint(x,y)?.getAttribute('data-handle'),[aim.x+aim.width/2,aim.y+aim.height/2]),'aim','drag starts on intended handle');await page.mouse.down();await page.mouse.move(aim.x+aim.width/2+40,aim.y+aim.height/2+20,{steps:5});await page.mouse.up();await page.waitForFunction(([id,value])=>Number(document.getElementById(id).value)!==value,['angle',0]);
+ await page.locator('[data-handle="arc"]').hover();const arc=await page.locator('[data-handle="arc"]').boundingBox();attemptedGesture={kind:'arc',box:arc,expected:'Arc changes from 180 after a committed arc drag'};assert.equal(await page.evaluate(([x,y])=>document.elementFromPoint(x,y)?.getAttribute('data-handle'),[arc.x+arc.width/2,arc.y+arc.height/2]),'arc','drag starts on intended handle');await page.mouse.down();await page.mouse.move(arc.x+arc.width/2+25,arc.y+arc.height/2+20,{steps:5});await page.mouse.up();await page.waitForFunction(([id,value])=>Number(document.getElementById(id).value)!==value,['arc',180]);
  await page.locator('#mirror').click();assert.equal(await page.locator('[data-slot]').count(),24);await page.locator('#delete').click();assert.equal(await page.locator('[data-slot]').count(),23);
  await page.locator('#add').click();await page.locator('#canvas').click({position:{x:90,y:110}});assert.equal(await page.locator('[data-slot]').count(),25);await page.locator('#undo').click();assert.equal(await page.locator('[data-slot]').count(),23);await page.locator('#add').click();
  await page.locator('#showShield').check();await page.locator('#zoomIn').click();assert.equal(await page.locator('#zoomLabel').textContent(),'125%');await page.locator('#fit').click();
@@ -38,5 +39,9 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
  await page.locator('#mountList button').filter({hasText:'LE01'}).click();await page.screenshot({path:path.join(root,'test-results','editor.png')});
  assert.deepEqual(errors,[]);await fs.writeFile(path.join(root,'test-results','ui.json'),JSON.stringify({passed:true,checks:['23 existing mounts','properties','undo/redo','drag position','drag direction','drag arc','mirror/delete','symmetric placement','shield layer','zoom','exact hull export','save/open embedded sprite','PNG import','scale'],consoleErrors:errors},null,2));
  console.log('UI checks passed; exact Verdant export verified.');
+ }catch(error){
+  const state=await page.evaluate(()=>({focus:document.hasFocus(),activeElement:document.activeElement?.id,angle:document.getElementById('angle').value,arc:document.getElementById('arc').value,forward:document.getElementById('forward').value,status:document.getElementById('status').textContent})).catch(()=>null);
+  await fs.writeFile(path.join(root,'test-results','ui-failure.json'),JSON.stringify({description:'When the recorded UI action runs, the expected contract should hold; an assertion failed.',expected:attemptedGesture?.expected,attemptedGesture,actual:state,error:String(error),executable:process.env.SHIPWRIGHT_EXECUTABLE||'source',observability:'Post-failure state only; cannot reconstruct missing earlier pointer events.'},null,2));
+  await page.screenshot({path:path.join(root,'test-results','ui-failure.png')}).catch(()=>{});throw error;
  }finally{await app.evaluate(({BrowserWindow})=>{for(const w of BrowserWindow.getAllWindows())w.destroy();});await app.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

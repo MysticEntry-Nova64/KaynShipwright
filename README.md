@@ -1,6 +1,6 @@
 # Kayn Shipwright
 
-Version **1.0.2**. Offline Electron/TypeScript Starsector hull-layout editor for Windows.
+Version **1.0.3**. Offline Electron/TypeScript Starsector hull-layout editor for Windows.
 
 Import a ship sprite, arrange weapon mounts, edit engines/shields/collision geometry, and export an editable design package for integration into your mod.
 
@@ -59,17 +59,19 @@ npm run test:package
 npm run test:classes
 npm run test:references
 npm run test:regressions
+npm run test:scaling
 npm run package
 ```
 
-Run the geometry workflow before session/package checks because they use its generated fixture. Tests write ignored artifacts under `test-results/`. Packaging creates a portable Windows app under `release-v1.0.2/`. Generated bundles, dependencies, binaries, local PNG assets and test outputs are excluded from this source repository.
+Run the geometry workflow before session/package checks because they use its generated fixture. Tests write ignored artifacts under `test-results/`. Packaging creates a portable Windows app under `release-v1.0.3/`. Generated bundles, dependencies, binaries, local PNG assets and test outputs are excluded from this source repository.
 
 Test a specific packaged executable from PowerShell (no old release is selected implicitly):
 
 ```powershell
-$env:SHIPWRIGHT_EXECUTABLE = (Resolve-Path 'release-v1.0.2/Kayn Shipwright-win32-x64/Kayn Shipwright.exe').Path
+$env:SHIPWRIGHT_EXECUTABLE = (Resolve-Path 'release-v1.0.3/Kayn Shipwright-win32-x64/Kayn Shipwright.exe').Path
 npm run test:packaged
 npm run test:regressions
+npm run test:scaling
 npm run test:geometry
 Remove-Item Env:SHIPWRIGHT_EXECUTABLE
 ```
@@ -85,3 +87,7 @@ Save `.shipwright.json` for editing. Export the complete design folder for discu
 Nonempty bounds follow a conservative simple-polygon authoring policy; empty bounds remain supported as radius-only geometry. Screen/game coordinate conversion and class reference scale are independent of canvas zoom.
 
 See [verification](docs/verification.md) for the checks performed and their limits. No license grant for third-party game artwork is implied. A source-code license has not yet been selected.
+
+Scaling validates the source before JSON copying and the scaled candidate before publication. Nonfinite derived mount-screen coordinates and polygon arithmetic reject the operation without changing the project. The desktop feature checks also accept `SHIPWRIGHT_EXECUTABLE` to test an explicitly selected installed build.
+
+For precise bug descriptions, aim-drag expectations, competing hypotheses and focused diagnostic commands, see [debugging](docs/debugging.md).

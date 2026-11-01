@@ -19,3 +19,32 @@ The packaged smoke test now requires an explicit absolute executable path and as
 Following explicit user authorization, the fixed build replaced the installed V1.0.2 application folder after all 73 staged files were hash-verified. The previous application folder and original shortcut files were retained for rollback. Both the plain and versioned Desktop collection shortcuts now target the fixed V1.0.2 executable, with verified empty arguments and its application directory as working directory. Version remains 1.0.2; no separate public binary release was published.
 
 Fresh build and all 15 domain/save tests passed. Against the installed executable, packaged smoke, focused audit regressions and the complete geometry/export/reopen workflow passed, including all 16 context-tool transitions. This supersedes the preceding historical statement that installation was untouched. The earlier v0.1.4 application files were preserved. No game or power-loss validation was added.
+
+
+## Scaling overflow and installed verification — 1 November 2026
+Source-before-clone validation and derived screen/polygon overflow checks now
+protect transactional scaling. All21domain/save tests pass. Two full source
+rounds, staged portable tests and two full installed feature rounds passed,
+including scaling rejection/unchanged export and historical save/gesture cases.
+The installed build remains1.0.2;73files match staging and8runtime files match
+source. First installed aim-drag assertion failed; hit-target/state waiting was
+strengthened and repeated runs passed, without claiming the original cause was
+isolated. No game/performance/power-loss guarantee. Detailed local evidence was retained separately from the source repository.
+
+
+## Version1.0.3 —1 November2026
+The scaling validation changes, focused aim contracts and optional diagnostics
+are now versioned1.0.3. Corrected two legacy degree-sign bytes in the UTF8HTML;
+22domain/save/version tests pass,including valid encoding and metadata/header
+consistency. Full desktop suites passed against source,staged package and actual
+installed1.0.3: weapons,geometry/tools,session races/failures,package containment,
+all5class references,comparison,audit regressions,scaling and6aim contracts.
+Packaged smoke checks running version,visible header and document title.
+Design export checks manifest version,README and folder name against metadata,
+plus all exported file hashes/readback and reopen.73installed files match stage,
+8runtime files match built source. Both plain/current-version shortcuts verified;
+previous1.0.2app and shortcut remain for rollback. Fresh installed screenshot opened.
+The original intermittent cold-start aim cause remains unresolved as documented
+in debugging.md; passing current checks does not establish zero errors.
+No dependency update,game/performance,power-loss or public binary-asset claim.
+These are local results; source is published separately from local game PNG assets.

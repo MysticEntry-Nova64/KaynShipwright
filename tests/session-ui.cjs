@@ -1,7 +1,7 @@
 const {_electron:electron}=require('playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path');
 (async()=>{
- const root=path.resolve(__dirname,'..'),env={...process.env};delete env.ELECTRON_RUN_AS_NODE;const app=await electron.launch({args:[root],env});const page=await app.firstWindow();page.on('dialog',d=>d.accept());page.setDefaultTimeout(8000);
+ const root=path.resolve(__dirname,'..'),env={...process.env};delete env.ELECTRON_RUN_AS_NODE;const app=await electron.launch(process.env.SHIPWRIGHT_EXECUTABLE?{executablePath:process.env.SHIPWRIGHT_EXECUTABLE,args:[],env}:{args:[root],env});const page=await app.firstWindow();page.on('dialog',d=>d.accept());page.setDefaultTimeout(8000);
  const input=page.locator('#fileInput');
  const upload=async(name,p)=>input.setInputFiles({name,mimeType:'application/json',buffer:Buffer.from(JSON.stringify(p))});
  try{

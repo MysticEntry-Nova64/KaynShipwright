@@ -52,7 +52,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
   await app.evaluate(({dialog},folder)=>{dialog.showOpenDialog=async()=>({filePaths:[folder],canceled:false});},results);
   await page.locator('#exportPackage').click();await page.locator('#status').filter({hasText:'Design package exported:'}).waitFor();
   const status=await page.locator('#status').textContent(),folder=status.slice('Design package exported: '.length),manifest=JSON.parse(await fs.readFile(path.join(folder,'manifest.json'),'utf8'));
-  assert.equal(manifest.toolVersion,'1.0.2');assert.equal(manifest.gameVerified,false);assert.equal(manifest.validation.errors.length,0);
+  const expectedVersion=require('../package.json').version;assert.equal(manifest.toolVersion,expectedVersion);assert.ok(path.basename(folder).includes('-design-V'+expectedVersion+'-'));assert.ok((await fs.readFile(path.join(folder,'README.txt'),'utf8')).includes('Shipwright V'+expectedVersion));assert.equal(manifest.gameVerified,false);assert.equal(manifest.validation.errors.length,0);
   for(const item of manifest.files){const bytes=await fs.readFile(path.join(folder,item.path));assert.equal(bytes.length,item.bytes);assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),item.sha256);}
   assert.deepEqual(JSON.parse(await fs.readFile(path.join(folder,'data/hulls/kayn_verdant.ship'),'utf8')),saved.hull);
   const projectFile=path.join(folder,'kayn_verdant.shipwright.json');await page.locator('#projectOpen').click({noWaitAfter:true});await page.locator('#fileInput').setInputFiles(projectFile);await page.locator('#status').filter({hasText:'Loaded Verdant'}).waitFor();await tool('engines');assert.equal(await page.locator('[data-geometry="engine"]').count(),4);

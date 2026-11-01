@@ -11,7 +11,7 @@ export async function previewPNG(p:Project):Promise<string>{
  const width=Math.max(...coordinates.map(q=>q[0]))-minX+30,height=Math.max(...coordinates.map(q=>q[1]))-minY+30;
  if(!Number.isFinite(width)||!Number.isFinite(height))throw Error('Geometry exceeds preview range.');
  const scale=Math.min(2,1400/width,1200/height),canvas=document.createElement('canvas');canvas.width=1500;canvas.height=1400;const ctx=canvas.getContext('2d')!;
- ctx.fillStyle='#101a20';ctx.fillRect(0,0,1500,1400);ctx.fillStyle='#e4eff1';ctx.font='24px Segoe UI';ctx.fillText(`${h.hullName} — Shipwright V1.0.2`,30,36);ctx.font='16px Segoe UI';ctx.fillText('BOW ↑  |  Orange: engines  Blue: shield  Green: bounds  Purple: collision radius',30,66);
+ ctx.fillStyle='#101a20';ctx.fillRect(0,0,1500,1400);ctx.fillStyle='#e4eff1';ctx.font='24px Segoe UI';ctx.fillText(`${h.hullName} — Shipwright V1.0.3`,30,36);ctx.font='16px Segoe UI';ctx.fillText('BOW ↑  |  Orange: engines  Blue: shield  Green: bounds  Purple: collision radius',30,66);
  ctx.save();ctx.translate(30-minX*scale,100-minY*scale);ctx.scale(scale,scale);ctx.drawImage(img,0,0,h.width,h.height);ctx.lineWidth=1.5/scale;ctx.font=`${12/scale}px Segoe UI`;
  const circle=(q:Point,r:number,color:string)=>{ctx.strokeStyle=color;ctx.beginPath();ctx.arc(q[0],q[1],r,0,Math.PI*2);ctx.stroke();};
  circle(shield,h.shieldRadius,'#73cafa');circle(origin,h.collisionRadius,'#dc98e8');
