@@ -1,0 +1,124 @@
+{
+  "version": "1.0.2",
+  "applicationPayloadSHA256": "1180d1126ee8a63eee0b20a95e600b00a6b8189132bcbe489d3d953eb229bcb2",
+  "originalPayloadSHA256": "cced1b6a15bfca6345402cb6f02e93cd7d635dc3840a6661a843827bfc4139cc",
+  "retrospective": true,
+  "sourceKind": "compiled-runtime-snapshot",
+  "runtimeFiles": [
+    {
+      "path": ".gitignore",
+      "bytes": 106,
+      "sha256": "9881fc362da805c7977c8537f884e012dd19a43cba1d3fe6da22d01328f9d7ec"
+    },
+    {
+      "path": "app.js",
+      "bytes": 55436,
+      "sha256": "91ad3bdfe78edeb0e84b0c9e6222877b1d122f753da71ac560b1c3342ccf7fc8"
+    },
+    {
+      "path": "assets\\class-references.json",
+      "bytes": 741,
+      "sha256": "0ad50bfd85be2a608c28ef2510db6ca021a925f417def41ceb52f1db8df0118f"
+    },
+    {
+      "path": "assets\\eagle-reference.png",
+      "bytes": 60537,
+      "sha256": "e9ed43f56cb3c6ac731c46effaba6117f705096629fd2709482a4c95575b3d96"
+    },
+    {
+      "path": "assets\\hammerhead-reference.json",
+      "bytes": 199,
+      "sha256": "b2a54eabaa537fec2e80f035958a1cd17a266d8e151844d3a09f02b18ac3ee9a"
+    },
+    {
+      "path": "assets\\hammerhead-reference.png",
+      "bytes": 34919,
+      "sha256": "54c67a9a6bb54297beb17bb5cce68d8c8cbeb18f6a6a11c17a914b732c871e4f"
+    },
+    {
+      "path": "assets\\lasher-reference.png",
+      "bytes": 12400,
+      "sha256": "b79bb7c13ba4c836844fb44cdfa479868ead7e453e54c270523bba515b91775a"
+    },
+    {
+      "path": "assets\\onslaught-reference.png",
+      "bytes": 191978,
+      "sha256": "982665f67483c6e254825921fa0aa850d7f8bea736055f14b8161ac629d01903"
+    },
+    {
+      "path": "assets\\talon-reference.png",
+      "bytes": 1353,
+      "sha256": "61ec148b93fb6969061b079c956df9541ff10f22dfedb1c1cc2c5d0eb6030235"
+    },
+    {
+      "path": "assets\\verdant.png",
+      "bytes": 92756,
+      "sha256": "07e224fda2ff8b98392acaa97ad751a0ef276c7e644c201c1f813638dbd67416"
+    },
+    {
+      "path": "assets\\verdant.ship",
+      "bytes": 6571,
+      "sha256": "d99093e810cb17c087b3ecc388467c6acc49c1712f2af3bd40c4f3dfc92cf169"
+    },
+    {
+      "path": "build.mjs",
+      "bytes": 269,
+      "sha256": "b1280f3d5a880419a2600e0e62cd2eeffd3d79551cb2d1f22ff8b8119d41eb8c"
+    },
+    {
+      "path": "core-node.cjs",
+      "bytes": 8951,
+      "sha256": "20544f821296bcbf2e847921e55e84262a39aca5c8fa6fcdd596a40ad4c8ce02"
+    },
+    {
+      "path": "index.html",
+      "bytes": 6348,
+      "sha256": "c465792d78574e7a44500e7b44974b0e7ff3746567ad5d8a1e299468d80d271e"
+    },
+    {
+      "path": "main.cjs",
+      "bytes": 1685,
+      "sha256": "04961359342b442b7af436648138be1bce16b0dfc4476294a53fed099a443b0f"
+    },
+    {
+      "path": "package-service.cjs",
+      "bytes": 3877,
+      "sha256": "c2b5506aa00466e95a8210e94259ef2caabd263e2b0209debab36cba57914440"
+    },
+    {
+      "path": "package.json",
+      "bytes": 190,
+      "sha256": "182c0bc20c780a9f2678d208b9ba2d61527e468169f5cbcbfdad084fea462215"
+    },
+    {
+      "path": "preload.cjs",
+      "bytes": 248,
+      "sha256": "a63a9ac8ef5453bca33033c4e56373a014f3ebbc9bd4a2f590b5d3c26d005b98"
+    },
+    {
+      "path": "save-service.cjs",
+      "bytes": 1223,
+      "sha256": "e7a14615d29979b8bdc0f7d6efc8de00b07094593445e9163eb35b6062db6a9a"
+    },
+    {
+      "path": "style.css",
+      "bytes": 5509,
+      "sha256": "70efad9bbf07860c2c71853f643a34a8e46159778e348ce92f56ea3cf5d67670"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 225,
+      "sha256": "d719a278593efbd0cf42c89d490b0b4dd154df62286d4c2235103ae711fc7e33"
+    }
+  ],
+  "excludedNonruntimeFiles": [
+    "README.md",
+    "docs\\gesture-and-save-patterns.md",
+    "docs\\images\\README.md",
+    "docs\\images\\engine-editor.png",
+    "docs\\images\\geometry-tools.png",
+    "docs\\images\\weapon-editor.png",
+    "docs\\verification.md",
+    "scripts\\import-local-assets.cjs"
+  ]
+}
