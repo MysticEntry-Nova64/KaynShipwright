@@ -1,3 +1,4 @@
+const {fileAction,revealSettings}=require('./studio-test-helpers.cjs');
 const {_electron:electron}=require('playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path');
 (async()=>{
@@ -6,7 +7,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
  const app=await electron.launch(process.env.SHIPWRIGHT_EXECUTABLE?{executablePath:process.env.SHIPWRIGHT_EXECUTABLE,args:[],env}:{args:[root],env});
  const records=[];
  try{
-  const page=await app.firstWindow();page.setDefaultTimeout(7000);page.on('dialog',d=>d.accept());await page.locator('[data-slot]').first().waitFor();
+  const page=await app.firstWindow();await revealSettings(page);page.setDefaultTimeout(7000);page.on('dialog',d=>d.accept());await page.locator('[data-slot]').first().waitFor();
   await page.evaluate(()=>{
    window.aimTrace=[];for(const type of ['pointerdown','pointermove','pointerup','pointercancel','gotpointercapture','lostpointercapture','blur','focus'])window.addEventListener(type,e=>{
     if(type==='pointermove'&&!e.buttons)return;
@@ -14,7 +15,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
    },true);
   });
   for(const mode of ['original','guarded'])for(let run=0;run<12;run++){
-   await page.locator('#example').click();await page.locator('#mountList button').filter({hasText:'ME01',exact:false}).click();
+   await fileAction(page,'#example');await page.locator('#mountList button').filter({hasText:'ME01',exact:false}).click();
    await page.locator('#arc').fill('180');await page.locator('#arc').press('Tab');await page.locator('#undo').click();await page.locator('#redo').click();
    const marker=await page.locator('[data-slot="ME01"] > circle').boundingBox();await page.mouse.move(marker.x+marker.width/2,marker.y+marker.height/2);await page.mouse.down();await page.mouse.move(marker.x+23,marker.y-17,{steps:8});await page.mouse.up();
    await page.evaluate(()=>window.aimTrace=[]);

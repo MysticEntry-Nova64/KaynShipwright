@@ -1,93 +1,106 @@
+<div align="center">
+
 # Kayn Shipwright
 
-Version **1.0.3**. Offline Electron/TypeScript Starsector hull-layout editor for Windows.
+**Build the layout. Keep your place. Review the export.**
 
-Import a ship sprite, arrange weapon mounts, edit engines/shields/collision geometry, and export an editable design package for integration into your mod.
+Offline Starsector hull-layout editor · Windows x64 · **2.0.0**
 
-![Kayn Shipwright showing a selected weapon mount, its firing arc, and exact mount properties.](docs/images/weapon-editor.png)
+[Download the latest release](https://github.com/MysticEntry-Nova64/KaynShipwright/releases/latest) · [Quick start](#start-building) · [Code map](docs/code-map.md) · [Release history](docs/releases.md)
 
-**Weapon layout:** drag mounts and aiming/arc handles, or enter exact coordinates and properties in the inspector.
+</div>
+
+![Shipwright 2.0.0: Studio, Canvas focus, geometry editing, export review and the close dialog.](docs/images/shipwright-2.0.0.gif)
+
+Actual packaged-app demonstration · 32.4 seconds · 15 fps. Captions and a progress bar explain each step.
+
+## Start building
+
+1. Download the Windows portable ZIP, extract the whole folder, then run **Kayn Shipwright.exe**.
+2. Use **Open / import** to open a project, import a PNG, browse Starsector ships, or load the example. PNG batches can be dropped anywhere in the window.
+3. Select a mount or choose **Weapons**, **Engines**, **Shield**, or **Collision bounds**. Edit with handles or exact fields. Undo and Redo track completed edits.
+4. **Save project** keeps an editable `.shipwright.json` with its embedded sprite. **Review export** checks the chosen scope and format before the destination step.
+
+Game files are read-only import sources. New copies keep their own IDs. A design package still needs gameplay stats, variants, mod metadata and game testing before release as a mod.
+
+## A workspace with room to think
+
+| Studio, the default | Canvas focus, your choice |
+| --- | --- |
+| Tools and searchable mounts on the left, canvas in the middle, selected properties on the right. | Wider canvas with compact tool and mount pickers; the inspector remains available. |
+| Less-used ship, placement and layer settings open when needed. | Keeps the same design, edits, history and zoom. The layout choice is remembered. |
 
 <details>
-<summary>See engine editing and geometry tools</summary>
+<summary>See the two layouts</summary>
 
-![Engine editing with position, exhaust direction, width, length, contrail size and style controls.](docs/images/engine-editor.png)
+![Studio workspace](docs/images/studio.png)
 
-**Engines:** move an engine, adjust its exhaust and width using canvas handles, or edit its numeric settings.
-
-![Collision vertices, shield and collision-radius circles, with the right-click menu listing all four editing tools.](docs/images/geometry-tools.png)
-
-**Geometry and tool switching:** edit collision vertices and shield geometry; right-click anywhere on the canvas to switch between Weapons, Shield, Engines and Collision bounds.
+![Canvas focus workspace](docs/images/canvas-focus.png)
 
 </details>
 
-Screenshots show the actual Windows app with original demonstration artwork. The demo illustrates the editing workflow; it is not a game-verified ship or bundled game sprite.
+## What you can edit
 
-## Features
+| Area | Controls and behavior |
+| --- | --- |
+| Weapons | Position, grouped positions, category, size, mount type, direction, firing arc and mirror copy. Selected mounts keep their label visible. |
+| Engines | Add, copy, mirror and delete; position, width, exhaust direction/length, contrail and style. |
+| Shield | Center and radius. Radius zero hides the editor circle; gameplay shield type remains a ship stat. |
+| Collision | Validated closed outline, nearest-edge insertion, vertex movement/deletion, rectangle/clear actions and collision radius. PNG drafts can receive an automatic outline. |
+| Scale | Resize hull and geometry together; compare with class references at a common scale. |
+| Workspace | Up to 16 designs, independent history/view state, recovery of unsaved drafts, Save All and batch layout export. |
+| Library | Search game/mod sources, preview sprites and open independent copies from a persistent import library. |
 
-Right-click anywhere on the canvas to choose **Weapons**, **Shield**, **Engines** or **Collision bounds**. The active tool is marked and its editing actions appear below. Tool switching does not add geometry. The sidebar selector stays synchronized.
+Right-click the canvas for the tool menu. Escape cancels an active gesture. Save and export finish an active gesture before taking their snapshot.
 
-- Weapon position, mount properties and aiming/arc handles.
-- Engine add/duplicate/mirror/delete, position, width and exhaust direction/length handles, exact fields and style/contrail settings.
-- Shield center and radius editing. Radius zero disables the editor circle; game shield type remains a ship stat.
-- Closed collision polygon vertex editing, nearest-edge insertion, deletion, rectangle/clear actions and collision radius editing.
-- Candidate validation, undo/redo, canceled-gesture restoration, revision-owned saving and generation-owned loading.
-- Design export: editable project, `.ship`, sprite, labeled PNG preview, validation and SHA-256 manifest. Writes to its own staged folder, reads files back and publishes the complete folder under a unique name.
+## Know what is kept
 
-## Local setup
+**Save** writes an editable project. **Export** writes a layout or design package and does not mark unsaved work as saved. **Recovery** restores open designs after restart; undo history starts fresh.
 
-Use Node.js 26 or a compatible runtime supporting direct TypeScript test execution, plus npm. Dependency versions are pinned in `package-lock.json`.
+The close screen offers **Keep editing**, **Close with recovery**, and **Close all**. Keep editing has initial focus; Escape returns to the workspace. Close with recovery waits for the write. Close all explicitly clears the two workspace recovery copies; saved project files stay on disk.
+
+![Saluting assistant and explicit close choices](docs/images/close.png)
+
+Design packages contain editable projects, `.ship` layouts, sprites, labeled previews and one SHA-256 manifest. Combined export creates one pack for all selected designs. Package name/version are export metadata. Recognized packages update through staged publication; unrecognized folders and conflicting paths block replacement.
+
+## Why I changed it
+
+I found that many visible controls competed with the selected ship. I wanted a clear path from choosing a tool to editing its properties, so Studio keeps those areas in a stable order and moves occasional settings into expandable sections.
+
+I thought a larger canvas should remain an easy choice, so Canvas focus reuses the same editor state. I wanted export scope and recovery consequences to be visible before a decision, so I added export review and explicit file-state wording. The saluting assistant follows the visual style of the folder-location guide without changing any close action.
+
+## Develop and verify
+
+Use a Node runtime that supports direct TypeScript execution (Node 24.22.1 was used for this release). Dependencies are pinned in `package-lock.json`.
 
 ```sh
 npm ci
 npm run assets:local -- "ABSOLUTE_PATH_TO_EXISTING_SHIPWRIGHT_ASSETS"
 npm run build
+npm test
 npm start
 ```
 
-The local game/reference sprite PNGs are deliberately excluded from Git. Supply your authorized local assets from an existing Shipwright installation/source folder. Six required files: `verdant.png`, `talon-reference.png`, `lasher-reference.png`, `hammerhead-reference.png`, `eagle-reference.png`, `onslaught-reference.png`. `assets/class-references.json` contains display dimensions and file names; `assets/verdant.ship` is the example layout fixture. Sprite redistribution rights are not granted by this source upload. Local sprite assets are required for the startup example and UI checks; class comparisons require their local reference images.
-
-## Build and checks
+Local game/reference sprites are excluded from the source tree. Supply your authorized assets: `verdant.png`, `talon-reference.png`, `lasher-reference.png`, `hammerhead-reference.png`, `eagle-reference.png`, and `onslaught-reference.png`. The source upload grants no third-party artwork rights.
 
 ```sh
-npm run build
-npm test
-npm run test:ui
-npm run test:geometry
-npm run test:session
-npm run test:package
-npm run test:classes
-npm run test:references
-npm run test:regressions
-npm run test:scaling
 npm run package
 ```
 
-Run the geometry workflow before session/package checks because they use its generated fixture. Tests write ignored artifacts under `test-results/`. Packaging creates a portable Windows app under `release-v1.0.3/`. Generated bundles, dependencies, binaries, local PNG assets and test outputs are excluded from this source repository.
-
-Test a specific packaged executable from PowerShell (no old release is selected implicitly):
+Then select the actual packaged executable and a disposable profile when running UI checks:
 
 ```powershell
-$env:SHIPWRIGHT_EXECUTABLE = (Resolve-Path 'release-v1.0.3/Kayn Shipwright-win32-x64/Kayn Shipwright.exe').Path
-npm run test:packaged
-npm run test:regressions
-npm run test:scaling
-npm run test:geometry
-Remove-Item Env:SHIPWRIGHT_EXECUTABLE
+$env:SHIPWRIGHT_EXECUTABLE = (Resolve-Path 'release-v2.0.0/Kayn Shipwright-win32-x64/Kayn Shipwright.exe').Path
+$env:SHIPWRIGHT_USER_DATA = Join-Path $PWD 'test-results/disposable-profile'
+node tests/studio-ui.cjs
+node tests/geometry-ui.cjs
+node tests/workspace-ui.cjs
+node tests/close-ui.cjs
+node tests/release-soak.cjs
 ```
 
-The packaged smoke test requires an absolute executable path and checks its running version against `package.json` (or an explicit `SHIPWRIGHT_EXPECTED_VERSION`). The regressions also support the selected executable; otherwise they launch the source build.
+See [verification](docs/verification.md), [functions, triggers and ownership](docs/code-map.md), [import behavior](docs/import-from-starsector.md), and [debugging](docs/debugging.md).
 
-Saving or exporting completes an active drag before taking the snapshot. Escape, pointer cancellation, capture loss and tool switching cancel it without adding history. Undo completes then reverses the drag. Successful serialized saves record their exact revision even after undo. Native project/standalone hull saves write and read back an owned sibling temporary file before replacing the destination. Write/readback/replacement failure leaves the prior destination intact; cleanup failures are reported with the retained temporary location. This does not promise power-loss durability.
+The release passed 63 unit tests and 13 packaged application suites. A separate bounded probe exercised 700 edits, 70 layout switches and 70 export-review cycles; a blocked-write heap probe checked recovery retention. These checks do not establish universal compatibility, long-session leak freedom, full accessibility, power-loss durability, or game verification. A historical intermittent cold aim-drag symptom remains without a confirmed cause; current aim contracts pass. Unsupported source geometry and duplicate IDs are reported rather than silently rewritten.
 
-## Handoff workflow and limits
-
-Save `.shipwright.json` for editing. Export the complete design folder for discussion and revisions; the preview supports visual review while the project preserves exact geometry and the manifest identifies artifacts. The package stages hull data for integration into an owning mod. Ship stats, variants, mod metadata, dependencies, balance and runtime verification remain separate. No active game files are written by export.
-
-Nonempty bounds follow a conservative simple-polygon authoring policy; empty bounds remain supported as radius-only geometry. Screen/game coordinate conversion and class reference scale are independent of canvas zoom.
-
-See [verification](docs/verification.md) for the checks performed and their limits. No license grant for third-party game artwork is implied. A source-code license has not yet been selected.
-
-Scaling validates the source before JSON copying and the scaled candidate before publication. Nonfinite derived mount-screen coordinates and polygon arithmetic reject the operation without changing the project. The desktop feature checks also accept `SHIPWRIGHT_EXECUTABLE` to test an explicitly selected installed build.
-
-For precise bug descriptions, aim-drag expectations, competing hypotheses and focused diagnostic commands, see [debugging](docs/debugging.md).
+No source-code license has been selected. Third-party runtime notices remain in the portable app.

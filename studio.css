@@ -1,0 +1,74 @@
+/* Studio test shell. Keep all established controls and dialogs; change layout only. */
+body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.studio-header{height:auto;min-height:66px;flex:none;gap:16px;padding:10px 16px}
+.studio-brand{flex:none}.studio-header h1{font-size:20px;margin:3px 0 0}.studio-header h1 small{font-size:11px}
+.studio-header .eyebrow{font-size:9px;letter-spacing:1.2px}
+.studio-header nav{gap:7px;align-items:center;flex-wrap:wrap;min-width:0}
+.studio-header button,.file-menu summary{min-height:34px;font-size:12px}
+.file-menu{position:relative;margin:0;padding:0}
+.file-menu summary{list-style:none;background:#24333c;color:#e1e9ed;border:1px solid #3b4f59;border-radius:5px;padding:7px 10px;cursor:pointer;white-space:nowrap}
+.file-menu summary::after{content:' ▾';color:#adc1c9}.file-menu summary::-webkit-details-marker{display:none}
+.file-menu-items{position:absolute;z-index:1100;top:calc(100% + 6px);left:0;min-width:230px;padding:6px;display:flex;flex-direction:column;gap:4px;border:1px solid #5b737d;background:#172128;border-radius:6px;box-shadow:0 10px 30px #0009}
+.file-menu-items button{width:100%;justify-content:flex-start;text-align:left;white-space:nowrap;background:transparent;border:0}
+.file-menu-items button:hover{background:#304a55}
+.file-menu-items button.primary{background:#304a35;color:#d6efcd}
+.layout-picker{margin:0;display:flex;align-items:center;gap:7px;font-size:11px;color:#b4c9cc}
+.layout-picker select{width:125px;margin:0;padding:7px}
+#droppedPanel{flex:none;padding:7px 16px;display:flex;gap:9px 12px;align-items:center;flex-wrap:wrap;background:#142128}
+#droppedPanel>strong{font-size:11px}#droppedPanel>span{margin:0;font-size:11px}
+#workspaceState{margin-left:auto!important;color:#a7c0c7!important}
+#projectFileState{color:#c4d9d9!important}#projectFileState[data-dirty=true]{color:#f1cc8f!important}
+#droppedPanel>small{display:none}
+#droppedDesigns{flex:1 0 100%;margin:0;gap:6px}
+#droppedDesigns button{min-width:150px;max-width:280px;padding:4px 8px;white-space:nowrap}
+#droppedDesigns img{width:17px;height:25px}
+#batchReport{flex:none}
+main,body:has(#droppedPanel:not([hidden])) main{height:auto!important;flex:1;min-height:0;grid-template-columns:232px minmax(320px,1fr) 292px}
+aside{padding:14px;scrollbar-width:thin;scrollbar-color:#50636b #172128}
+.object-sidebar h2{margin-top:2px}
+.object-sidebar #objectBrowser{margin-top:18px;padding-top:14px;border-top:1px solid #33464f}
+#mountList{display:flex;flex-direction:column;max-height:210px;margin-top:8px;gap:3px}
+#mountList button{display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:7px 8px;min-height:34px;flex:none}
+#mountList button small{display:inline;margin:0 0 0 8px;font-size:10px}
+#mountList button.active{background:#304331;border-color:#b2d69d}
+.object-sidebar>details{border-top:1px solid #33464f;margin-top:15px;padding-top:12px}
+.object-sidebar summary{font-size:12px;font-weight:600;cursor:pointer;color:#c9dadb}
+.object-sidebar .tool-help{margin-top:9px;padding-top:0;border-top:0}
+.object-sidebar .tool-help summary{font-size:11px;font-weight:400;color:#a9bdc5}
+#editTool{margin-top:6px}
+#mountSearch{margin-top:5px}
+.focus-picker{display:none;margin:0;font-size:11px;align-items:center;gap:7px}
+.focus-picker select{margin:0;width:188px;font-size:11px;padding:5px}
+.toolbar{height:auto;min-height:48px;gap:8px;flex-wrap:wrap;padding:8px 12px;flex:none}
+.toolbar>div{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.toolbar #mode{padding:0 7px}
+.toolbar button{font-size:11px;min-height:30px}
+.inspector h2{margin-top:4px;margin-bottom:12px}
+#selectionSummary{font-size:12px;text-transform:none;letter-spacing:0;color:#d4eac8}
+.inspector label{color:#b4c6cd}
+.inspector .hint{color:#a3b9c3}
+.coordinate-help{margin:7px 0;line-height:1.5}
+.inspector #weaponInspector{border-bottom:1px solid #344750;padding-bottom:14px}
+.inspector #geometryInspector{border-bottom:1px solid #344750}
+.inspector>h2{margin-top:16px}
+#properties input,#properties select{margin-top:4px}
+footer{min-height:40px;height:auto;flex:none;flex-wrap:wrap;gap:6px;padding:7px 10px}
+#status{min-width:160px;font-size:11px;overflow-wrap:anywhere}
+#dimensions{font-size:11px;white-space:nowrap}
+.canvasNote{font-size:11px}.canvasNote span{display:none}
+body[data-layout=focus] main,body[data-layout=focus]:has(#droppedPanel:not([hidden])) main{grid-template-columns:minmax(320px,1fr) 292px}
+body[data-layout=focus] .object-sidebar{display:none}
+body[data-layout=focus] .focus-picker{display:flex}
+/* The selector remains accessible when the settings sidebar is hidden. */
+#focusTools{display:none;align-items:center;gap:7px;font-size:11px;margin:0}
+#focusTools select{margin:0;width:140px;font-size:11px;padding:5px}
+body[data-layout=focus] #focusTools{display:flex}
+#exportReviewDialog{width:min(650px,90vw);max-height:90vh;overflow:auto;padding:22px;color:#dbe7e9;background:#172128;border:1px solid #536b78;border-radius:9px}
+#exportReviewDialog::backdrop{background:#0009}
+#exportReviewDialog p{line-height:1.6;overflow-wrap:anywhere}
+#exportReviewDialog .comparisonHeader h2{margin:0}
+#exportReviewChecks{white-space:pre-line}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #b2e4a5;outline-offset:2px}
+@media(max-width:1150px){main,body:has(#droppedPanel:not([hidden])) main{grid-template-columns:216px minmax(300px,1fr) 270px}.studio-header{padding:8px 12px;gap:10px}.studio-header nav{gap:5px}.studio-header .eyebrow{font-size:8px}.layout-picker{gap:4px}body[data-layout=focus] main,body[data-layout=focus]:has(#droppedPanel:not([hidden])) main{grid-template-columns:minmax(300px,1fr) 270px}.toolbar #mode{display:none}}
+
+/* Character stays above the choice list: safe defaults and error space remain visible. */
+#closeDialog{width:min(600px,90vw);max-height:90vh;overflow:auto}.close-intro{display:flex;align-items:center;gap:20px;min-width:0}.close-intro img{width:160px;height:160px;object-fit:contain;flex:0 0 160px}.close-intro>div{min-width:0}#closeDescription{overflow-wrap:anywhere}.close-actions small{overflow-wrap:anywhere}@media(max-width:600px){.close-intro{gap:12px}.close-intro img{width:110px;height:110px;flex-basis:110px}}

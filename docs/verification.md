@@ -1,50 +1,24 @@
-# Verification record — 1 November 2026
+# 2.0.0 verification
 
-The local V1.0.2 build passed TypeScript checking, 14 core/domain/session tests, the original weapon editing workflow, all five hull-class reference checks and zoom-independent comparison checks.
+Release checks used Windows x64, Electron 45.2.1, Playwright 1.64.1 and Node 24.22.1. Tests selected the actual packaged executable and disposable profiles; native file choosers and selected failures were redirected deliberately by the harness.
 
-Both source and packaged Windows executable passed the geometry/export/reopen workflow. Every context menu exposed all four tools; all 16 mode transitions preserved geometry and synchronized the selector. Actual delayed saves, out-of-order imports, intervening edits, save cancellation/failure, malformed imports and undo-to-saved behavior were exercised. Exported sizes/hashes and hull contents were read back; injected write failure left no partial final package or owned staging folder. Fresh UI and exported preview images were opened for inspection.
+- TypeScript check, esbuild bundles and 63 unit tests passed, with no skipped tests.
+- 13 packaged suites passed: startup smoke, Studio, geometry, workspace, close, imports, startup/location, PNG drops, aim contracts, class references, save/gesture regressions, scaling and recovery heap retention.
+- Save/readback, canceled and delayed saves, partial-write failure, batch partial failure/retry, duplicate IDs, stale/canceled imports, exact exported values, restart recovery and clear-failure paths were exercised.
+- Numerical checks include nonfinite data before JSON copying, derived coordinate/polygon overflow, rejected scaling with preserved export, and validated candidate geometry. This is not a proof for every representable input.
+- The repeated-use probe completed 700 edits, 70 layout switches and 70 export-review cycles. Across seven diagnostic-GC boundaries, listeners stayed at 147, DOM nodes ended at 1,395 versus 1,533 after warmup, and renderer live heap grew 105,248 bytes (about 103 KiB). This is a short bounded fixed-workspace probe, not a long-session soak or native/GPU leak proof.
+- A separate real blocked-recovery-write probe submitted 13 changing states across the debounce. Retention stayed at active plus latest pending; draining wrote the newest state and released expired snapshots. Heap snapshots stayed local.
+- Fresh Studio/focus and 1080×720 close/minimum-window screenshots were inspected. Keep editing has initial focus; Escape returns to editing; the saluting image decodes and fits inside the close dialog.
+- The 486-frame demonstration decodes fully, loops, runs 32,400 ms at an average 15 fps and verifies the real exported package manifest. Captions/progress are presentation overlays on actual app captures.
 
-These are historical local results, not CI results. Tests require the local PNG fixtures described in the README. No Starsector launch, target-runtime hull loading, engine rendering/handling, balance trial or performance measurement was performed. The generated manifest therefore marks `gameVerified: false`.
+## Review and cleanup
 
-## Source-audit fixes — 1 November 2026
+The Studio controller owns presentation and delegates edits/IO to existing owners. Its handlers were expanded for readability; accidental blank-line multiplication in the editor was removed. No speculative model/native rewrite or claimed speedup was introduced. History is bounded at 80 snapshots and shares immutable image strings. Recovery coalesces superseded pending snapshots; PNG/recovery/batch paths retain byte/pixel/document limits. Async load, save, outline and pointer ownership were reviewed against current source and exercised by existing regression paths.
 
-The audited baseline was commit `2ba02603e6c4b59d3e5a8b4c1ad05a93d4b36837`. Four independently reproduced reliability defects were corrected: saved-revision ownership after undo, serialization of transient drag geometry, destructive partial overwrite on ordinary save failure, and weapon cancellation committing movement. A shared pointer-gesture controller now handles completion and rollback for weapons and geometry. Save/export settle a gesture; Escape/cancellation/capture loss/tool switching restore it. Ordinary native saves stage/read back a sibling file before replacement. Save completions record their exact revision under the renderer's existing serialization contract.
+Legacy tests were corrected where their expectations predated the additive workspace, hidden Studio menus and manifest v2 paths. Gesture tests now open menus through keyboard while holding a drag rather than creating a second mouse gesture. These were test-contract corrections, not evidence that the original application behavior was broken.
 
-Build and 15 domain/save tests passed. Staged-save failure checks cover partial writes, readback mismatch, replacement failure and cleanup failure before/after publication. The original weapon, geometry, session, package-failure, five-class and reference suites passed. Focused regressions passed from source and a newly built Windows package: A/B/undo/save/redo with disk/prompt checks; position/aim/arc cancellation through Escape, pointercancel and capture loss; engine/weapon Save and both exports during drags; Undo and tool switching; native partial-write failure preserving the old file and dirty document, cleanup and successful retry. Cancellation/capture-loss events were dispatched after actual mouse movement; physical OS touch interruptions were not simulated.
+## Limits
 
-The packaged smoke test now requires an explicit absolute executable path and asserts the running version. Missing-path and intentionally wrong-version checks rejected their inputs; the new package passed startup, reference selection and unsaved-close protection, plus the complete geometry/export/reopen workflow. Packaged editor and exported preview PNGs were opened for inspection. This is local verification, not CI or game-runtime validation. Replacement tests do not establish power-loss durability. Installed release and shortcut were not replaced.
+No universal bug-free, overflow-free or leak-free claim. No long-duration native/GPU/OS-handle audit, exhaustive source-format compatibility, full screen-reader/high-DPI/touch audit, power-loss durability or new Starsector combat verification. An intermittent historical cold aim-drag symptom still has no confirmed root cause; current physical-direction and cancellation contracts pass. Unsupported outlines, duplicate IDs, missing sprites, skins and modular-assembly limitations remain explicit. Export is a design pack, not a complete game-ready mod.
 
-### Installed update — 1 November 2026
-
-Following explicit user authorization, the fixed build replaced the installed V1.0.2 application folder after all 73 staged files were hash-verified. The previous application folder and original shortcut files were retained for rollback. Both the plain and versioned Desktop collection shortcuts now target the fixed V1.0.2 executable, with verified empty arguments and its application directory as working directory. Version remains 1.0.2; no separate public binary release was published.
-
-Fresh build and all 15 domain/save tests passed. Against the installed executable, packaged smoke, focused audit regressions and the complete geometry/export/reopen workflow passed, including all 16 context-tool transitions. This supersedes the preceding historical statement that installation was untouched. The earlier v0.1.4 application files were preserved. No game or power-loss validation was added.
-
-
-## Scaling overflow and installed verification — 1 November 2026
-Source-before-clone validation and derived screen/polygon overflow checks now
-protect transactional scaling. All21domain/save tests pass. Two full source
-rounds, staged portable tests and two full installed feature rounds passed,
-including scaling rejection/unchanged export and historical save/gesture cases.
-The installed build remains1.0.2;73files match staging and8runtime files match
-source. First installed aim-drag assertion failed; hit-target/state waiting was
-strengthened and repeated runs passed, without claiming the original cause was
-isolated. No game/performance/power-loss guarantee. Detailed local evidence was retained separately from the source repository.
-
-
-## Version1.0.3 —1 November2026
-The scaling validation changes, focused aim contracts and optional diagnostics
-are now versioned1.0.3. Corrected two legacy degree-sign bytes in the UTF8HTML;
-22domain/save/version tests pass,including valid encoding and metadata/header
-consistency. Full desktop suites passed against source,staged package and actual
-installed1.0.3: weapons,geometry/tools,session races/failures,package containment,
-all5class references,comparison,audit regressions,scaling and6aim contracts.
-Packaged smoke checks running version,visible header and document title.
-Design export checks manifest version,README and folder name against metadata,
-plus all exported file hashes/readback and reopen.73installed files match stage,
-8runtime files match built source. Both plain/current-version shortcuts verified;
-previous1.0.2app and shortcut remain for rollback. Fresh installed screenshot opened.
-The original intermittent cold-start aim cause remains unresolved as documented
-in debugging.md; passing current checks does not establish zero errors.
-No dependency update,game/performance,power-loss or public binary-asset claim.
-These are local results; source is published separately from local game PNG assets.
+Historical archived versions were identified and checksummed separately. They do not inherit these results.

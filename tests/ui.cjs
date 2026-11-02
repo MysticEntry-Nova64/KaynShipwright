@@ -1,10 +1,11 @@
+const {fileAction,revealSettings}=require('./studio-test-helpers.cjs');
 const {_electron:electron}=require('playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path');
 (async()=>{
  const root=path.resolve(__dirname,'..');await fs.mkdir(path.join(root,'test-results'),{recursive:true});
  const env={...process.env};delete env.ELECTRON_RUN_AS_NODE;
  const app=await electron.launch(process.env.SHIPWRIGHT_EXECUTABLE?{executablePath:process.env.SHIPWRIGHT_EXECUTABLE,args:[],env}:{args:[root],env});
- const page=await app.firstWindow(),errors=[];page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(['error','warning'].includes(m.type()))errors.push(m.text());});
+ const page=await app.firstWindow(),errors=[];await revealSettings(page);page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(['error','warning'].includes(m.type()))errors.push(m.text());});
  page.on('dialog',d=>d.accept());
  let attemptedGesture=null;
  try{
@@ -21,21 +22,21 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
  await page.locator('#mirror').click();assert.equal(await page.locator('[data-slot]').count(),24);await page.locator('#delete').click();assert.equal(await page.locator('[data-slot]').count(),23);
  await page.locator('#add').click();await page.locator('#canvas').click({position:{x:90,y:110}});assert.equal(await page.locator('[data-slot]').count(),25);await page.locator('#undo').click();assert.equal(await page.locator('[data-slot]').count(),23);await page.locator('#add').click();
  await page.locator('#showShield').check();await page.locator('#zoomIn').click();assert.equal(await page.locator('#zoomLabel').textContent(),'125%');await page.locator('#fit').click();
- await page.locator('#example').click();await page.locator('#count').filter({hasText:'23'}).waitFor();
+ await fileAction(page,'#example');await page.locator('#count').filter({hasText:'23'}).waitFor();
  const exportPath=path.join(root,'test-results','roundtrip.ship');
  await app.evaluate(({dialog},filePath)=>{dialog.showSaveDialog=async()=>({filePath,canceled:false});},exportPath);
- await page.locator('#export').click();await page.locator('#status').filter({hasText:'Layout exported'}).waitFor();assert.deepEqual(JSON.parse(await fs.readFile(exportPath,'utf8')),JSON.parse(await fs.readFile(path.join(root,'assets/verdant.ship'),'utf8')));
+ await fileAction(page,'#export');await page.locator('#status').filter({hasText:'Layout exported'}).waitFor();assert.deepEqual(JSON.parse(await fs.readFile(exportPath,'utf8')),JSON.parse(await fs.readFile(path.join(root,'assets/verdant.ship'),'utf8')));
  const projectPath=path.join(root,'test-results','saved.shipwright.json');await app.evaluate(({dialog},filePath)=>{dialog.showSaveDialog=async()=>({filePath,canceled:false});},projectPath);
  await page.locator('#save').click();await page.locator('#status').filter({hasText:'Project saved'}).waitFor();assert.equal(JSON.parse(await fs.readFile(projectPath,'utf8')).hull.weaponSlots.length,23);
- await page.locator('#imageOpen').click({noWaitAfter:true});
+ await fileAction(page,'#imageOpen');
  // Use the native input to exercise the same PNG import path as drag-and-drop.
  await page.locator('#fileInput').setInputFiles(path.join(root,'assets/verdant.png'));await page.locator('#count').filter({hasText:/^0$/}).waitFor();
- await page.locator('#projectOpen').click({noWaitAfter:true});await page.locator('#fileInput').setInputFiles(projectPath);await page.locator('#count').filter({hasText:'23'}).waitFor();
- await page.locator('#scale').fill('1.2');await page.locator('#resize').click();assert.match(await page.locator('#dimensions').textContent(),/288 × 432/);await page.locator('#undo').click();
+ await fileAction(page,'#projectOpen');await page.locator('#fileInput').setInputFiles(projectPath);await page.locator('#count').filter({hasText:'23'}).waitFor();
+ await page.locator('#scale').fill('1.2');await page.locator('#resize').click();assert.match(await page.locator('#dimensions').textContent(),/288 Ã— 432/);await page.locator('#undo').click();
  const png=await fs.readFile(path.join(root,'assets/verdant.png'));
  const transfer=await page.evaluateHandle(bytes=>{const dt=new DataTransfer();dt.items.add(new File([new Uint8Array(bytes)],'dropped.png',{type:'image/png'}));return dt;},Array.from(png));
  await page.locator('#viewport').dispatchEvent('drop',{dataTransfer:transfer});await page.locator('#count').filter({hasText:/^0$/}).waitFor();
- await page.locator('#example').click();await page.locator('#count').filter({hasText:'23'}).waitFor();
+ await fileAction(page,'#example');await page.locator('#count').filter({hasText:'23'}).waitFor();
  await page.locator('#mountList button').filter({hasText:'LE01'}).click();await page.screenshot({path:path.join(root,'test-results','editor.png')});
  assert.deepEqual(errors,[]);await fs.writeFile(path.join(root,'test-results','ui.json'),JSON.stringify({passed:true,checks:['23 existing mounts','properties','undo/redo','drag position','drag direction','drag arc','mirror/delete','symmetric placement','shield layer','zoom','exact hull export','save/open embedded sprite','PNG import','scale'],consoleErrors:errors},null,2));
  console.log('UI checks passed; exact Verdant export verified.');

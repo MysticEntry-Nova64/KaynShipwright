@@ -1,3 +1,4 @@
+const {fileAction,revealSettings}=require('./studio-test-helpers.cjs');
 const {_electron:electron}=require('playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path');
 (async()=>{
@@ -11,17 +12,17 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
  const configureSave=()=>app.evaluate(({dialog},files)=>{dialog.showSaveDialog=async(_win,options)=>({filePath:options.defaultPath.endsWith('.shipwright.json')?files.projectFile:files.hullFile,canceled:false});},{projectFile,hullFile});
  const clearStatus=()=>page.evaluate(()=>document.getElementById('status').textContent='Waiting for action');
  const save=async(keyboard=false)=>{await clearStatus();if(keyboard){await page.locator('#save').focus();await page.keyboard.press('Enter');}else await page.locator('#save').click();await page.locator('#status').filter({hasText:'saved'}).waitFor();return JSON.parse(await fs.readFile(projectFile,'utf8'));};
- const model=async()=>{await clearStatus();await page.locator('#export').click();await page.locator('#status').filter({hasText:'Layout exported'}).waitFor();return JSON.parse(await fs.readFile(hullFile,'utf8'));};
- const example=async()=>{await clearStatus();await page.locator('#example').click();await page.locator('#status').filter({hasText:'Loaded Verdant'}).waitFor();};
+ const model=async()=>{await clearStatus();await fileAction(page,'#export');await page.locator('#status').filter({hasText:'Layout exported'}).waitFor();return JSON.parse(await fs.readFile(hullFile,'utf8'));};
+ const example=async()=>{await clearStatus();await fileAction(page,'#example');await page.locator('#status').filter({hasText:'Loaded Verdant'}).waitFor();};
  const name=async value=>{await page.locator('#name').fill(value);await page.locator('#name').press('Tab');};
  const start=async selector=>{const b=await page.locator(selector).first().boundingBox();assert.ok(b,selector);await page.mouse.move(b.x+b.width/2,b.y+b.height/2);await page.mouse.down();await page.mouse.move(b.x+b.width/2+25,b.y+b.height/2+20,{steps:5});};
  try{
-  await page.locator('[data-slot]').first().waitFor();await configureSave();
+  await page.locator('[data-slot]').first().waitFor();await revealSettings(page);await configureSave();
   if(executable)assert.equal(await app.evaluate(({app})=>app.getVersion()),require('../package.json').version);
   await name('Revision A');await save();await name('Revision B');await save();await page.locator('#undo').click();
   assert.equal((await save()).hull.hullName,'Revision A');assert.equal(await page.locator('#status').textContent(),'Project saved with embedded sprite.');
-  await page.locator('#redo').click();accept=false;let beforeDialogs=dialogs;await page.locator('#example').click();assert.equal(dialogs,beforeDialogs+1);assert.equal(await page.locator('#name').inputValue(),'Revision B');accept=true;await example();
-  checks.push('undo/save/redo tracks the actual disk revision and prompts before replacement');
+  await page.locator('#redo').click();let beforeDialogs=dialogs;await example();assert.equal(dialogs,beforeDialogs);assert.ok(await page.locator('#droppedDesigns button').count()>=2);await page.locator('[data-drop-index="0"]').click();assert.equal(await page.locator('#name').inputValue(),'Revision B');await example();
+  checks.push('undo/save/redo tracks the actual disk revision; opening an example preserves the existing draft');
 
   // All weapon gesture types must cancel without history by every cancellation route.
   for(const kind of ['move','aim','arc'])for(const cancellation of ['Escape','pointercancel','lostpointercapture']){
@@ -43,12 +44,13 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
    await page.locator('#editTool').selectOption(tool);const before=await model();await start(selector);await page.keyboard.press('Escape');await page.mouse.up();assert.deepEqual(await model(),before);
    await start(selector);await page.locator('#canvas').focus();await page.keyboard.press('Control+z');await page.mouse.up();assert.deepEqual(await model(),before,'Undo settles then reverses gesture');
    await start(selector);await page.evaluate(()=>{const select=document.getElementById('editTool');select.value='shield';select.dispatchEvent(new Event('change'));});await page.mouse.up();assert.deepEqual(await model(),before,'tool switch cancels');
-   await page.locator('#editTool').selectOption(tool);await start(selector);await page.locator('#export').focus();await page.keyboard.press('Enter');await page.locator('#status').filter({hasText:'Layout exported'}).waitFor();await page.keyboard.press('Escape');await page.mouse.up();const exported=JSON.parse(await fs.readFile(hullFile,'utf8'));assert.deepEqual(await model(),exported,'export settles gesture');
+   await page.locator('#editTool').selectOption(tool);await start(selector);await page.locator('#moreMenu summary').focus();await page.keyboard.press('Enter');await page.locator('#export').focus();await page.keyboard.press('Enter');await page.locator('#status').filter({hasText:'Layout exported'}).waitFor();await page.keyboard.press('Escape');await page.mouse.up();const exported=JSON.parse(await fs.readFile(hullFile,'utf8'));assert.deepEqual(await model(),exported,'export settles gesture');
    const packageParent=path.join(output,'audit-designs');await fs.mkdir(packageParent,{recursive:true});await app.evaluate(({dialog},folder)=>{dialog.showOpenDialog=async()=>({filePaths:[folder],canceled:false});},packageParent);
-   await start(selector);await clearStatus();await page.locator('#exportPackage').focus();await page.keyboard.press('Enter');await page.locator('#status').filter({hasText:'Design package exported:'}).waitFor();
+   await start(selector);await clearStatus();await page.locator('#moreMenu summary').focus();await page.keyboard.press('Enter');await page.locator('#exportPackage').focus();await page.keyboard.press('Enter');await page.locator('#packageConfirm').click();await page.locator('#status').filter({hasText:'Design package exported:'}).waitFor();
    const packageFolder=(await page.locator('#status').textContent()).slice('Design package exported: '.length);await page.keyboard.press('Escape');await page.mouse.up();
-   const packageProject=JSON.parse(await fs.readFile(path.join(packageFolder,'kayn_verdant.shipwright.json'),'utf8'));assert.notDeepEqual(packageProject.hull,exported);assert.deepEqual(await model(),packageProject.hull,'design package settles gesture');
-   accept=false;beforeDialogs=dialogs;await page.locator('#example').click();assert.equal(dialogs,beforeDialogs+1,'package export does not mark the project saved');accept=true;
+   const manifest=JSON.parse(await fs.readFile(path.join(packageFolder,'manifest.json'),'utf8'));
+   const packageProject=JSON.parse(await fs.readFile(path.join(packageFolder,manifest.ships[0].project),'utf8'));assert.notDeepEqual(packageProject.hull,exported);assert.deepEqual(await model(),packageProject.hull,'design package settles gesture');
+   assert.match(await page.locator('#projectFileState').textContent(),/Unsaved changes/,'package export does not mark the project saved');
   }
   checks.push('weapon/engine Save, hull Export and design-package Export settle gestures; Undo reverses them; tool switch and Escape cancel; replacement protects unsaved exports');
 
@@ -58,7 +60,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
   try{await clearStatus();await page.locator('#save').click();await page.locator('#status').filter({hasText:'Injected partial write'}).waitFor();}
   finally{await app.evaluate(()=>{process.getBuiltinModule('node:fs/promises').writeFile=global.auditOriginalWrite;});}
   assert.deepEqual(await fs.readFile(projectFile),good,'previous native save survives partial write');assert.equal((await fs.readdir(output)).filter(n=>n.startsWith('.shipwright-save-')).length,0);
-  accept=false;beforeDialogs=dialogs;await page.locator('#example').click();assert.equal(dialogs,beforeDialogs+1);assert.equal(await page.locator('#name').inputValue(),'New working project');accept=true;
+  assert.match(await page.locator('#projectFileState').textContent(),/Unsaved changes/);assert.equal(await page.locator('#name').inputValue(),'New working project');
   assert.equal((await save()).hull.hullName,'New working project');assert.deepEqual(errors,[]);
   checks.push('native partial-write failure preserves previous bytes, dirty state and owned-stage cleanup; retry succeeds');
   await fs.writeFile(path.join(output,executable?'audit-regressions-packaged.json':'audit-regressions.json'),JSON.stringify({passed:true,packaged:!!executable,checks,errors},null,2));console.log('Audit regressions passed:',checks);

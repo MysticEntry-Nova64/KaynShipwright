@@ -1,0 +1,8 @@
+UI artwork
+
+location-assistant.png: generated for the winking Shipwright assistant.
+close-assistant.png: generated for the matching saluting close-dialog assistant.
+Both use transparent backgrounds and are bundled as static images.
+
+select-folder-guide.png: supplied folder-selection guide, used unchanged.
+Ship-and-arrow icons: project-native SVG shapes in index.html.

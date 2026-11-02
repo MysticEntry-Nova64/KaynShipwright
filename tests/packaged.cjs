@@ -1,3 +1,4 @@
+const {fileAction,revealSettings}=require('./studio-test-helpers.cjs');
 const {_electron:electron}=require('playwright');
 const path=require('node:path'),fs=require('node:fs/promises'),assert=require('node:assert/strict');
 (async()=>{
@@ -9,16 +10,16 @@ const path=require('node:path'),fs=require('node:fs/promises'),assert=require('n
  const app=await electron.launch({executablePath:executable,env});
  try{
   assert.equal(await app.evaluate(({app})=>app.getVersion()),expectedVersion,'packaged application version');
-  const page=await app.firstWindow(),errors=[];page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(String(e)));
+  const page=await app.firstWindow(),errors=[];await revealSettings(page);page.setDefaultTimeout(10000);page.on('pageerror',e=>errors.push(String(e)));
   await fs.mkdir(path.join(root,'test-results'),{recursive:true});
-  await page.locator('#count').filter({hasText:'23'}).waitFor();assert.equal(await page.locator('h1 small').textContent(),'V'+expectedVersion);assert.equal(await page.title(),'Kayn Shipwright V'+expectedVersion);assert.equal(await page.locator('[data-slot]').count(),23);
+  await page.locator('#count').filter({hasText:'23'}).waitFor();assert.equal(await page.locator('h1 small').textContent(),'V'+expectedVersion);assert.equal(await page.title(),require('../package.json').productName+' V'+expectedVersion);assert.equal(await page.locator('[data-slot]').count(),23);
   await page.locator('#compareScale').click();await page.locator('[data-reference="1"]').waitFor();assert.equal(await page.locator('[data-reference]').count(),1);
   await page.locator('#referenceClass').selectOption('CAPITAL_SHIP');assert.match(await page.locator('#comparisonRatio').textContent(),/Onslaught/);
   await page.locator('#closeComparison').click();await page.locator('#mountList button').filter({hasText:'ME01'}).click();
   await page.screenshot({path:path.join(root,'test-results','packaged-editor.png')});
   await page.locator('#name').fill('Unsaved test');await page.locator('#name').press('Tab');
   await app.evaluate(({BrowserWindow,dialog})=>{dialog.showMessageBoxSync=()=>0;BrowserWindow.getAllWindows()[0].close();});
-  assert.equal(await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().length),1);assert.deepEqual(errors,[]);
+  await page.locator('#closeDialog').waitFor();await page.locator('#closeKeepEditing').click();assert.equal(await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().length),1);assert.deepEqual(errors,[]);
   await fs.writeFile(path.join(root,'test-results','packaged.json'),JSON.stringify({passed:true,executable,version:expectedVersion,mounts:23,unsavedCloseCancelled:true,consoleErrors:errors},null,2));
   console.log('Packaged executable launches with 23 mounts; unsaved-close protection works.');
  }finally{await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().forEach(w=>w.destroy()));await app.close();}

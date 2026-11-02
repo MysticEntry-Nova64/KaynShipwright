@@ -1,14 +1,15 @@
+const {fileAction,revealSettings}=require('./studio-test-helpers.cjs');
 const {_electron:electron}=require('playwright');const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path');
 (async()=>{
  const root=path.resolve(__dirname,'..'),out=process.env.AIM_OUTPUT||path.join(root,'test-results','aim-contract');await fs.mkdir(out,{recursive:true});
  const env={...process.env};delete env.ELECTRON_RUN_AS_NODE;
  const executable=process.env.SHIPWRIGHT_EXECUTABLE;const app=await electron.launch(executable?{executablePath:executable,args:[],env}:{args:[root],env});const checks=[];
  try{
-  const page=await app.firstWindow();page.setDefaultTimeout(7000);page.on('dialog',d=>d.accept());await page.locator('[data-slot]').first().waitFor();await page.bringToFront();
+  const page=await app.firstWindow();await revealSettings(page);page.setDefaultTimeout(7000);page.on('dialog',d=>d.accept());await page.locator('[data-slot]').first().waitFor();await page.bringToFront();
   const dest=path.join(out,'observed.ship');await app.evaluate(({dialog},file)=>{dialog.showSaveDialog=async()=>({filePath:file,canceled:false});},dest);
-  const reset=async()=>{await page.locator('#example').click();await page.locator('#mountList button').filter({hasText:'ME01'}).click();assert.equal(await page.locator('#angle').inputValue(),'0');};
+  const reset=async()=>{await fileAction(page,'#example');await page.locator('#mountList button').filter({hasText:'ME01'}).click();assert.equal(await page.locator('#angle').inputValue(),'0');};
   const start=async()=>{await page.locator('[data-handle="aim"]').hover();const b=await page.locator('[data-handle="aim"]').boundingBox();await page.mouse.down();return b;};
-  const model=async()=>{await page.locator('#export').click();await page.locator('#status').filter({hasText:'Layout exported'}).waitFor();return JSON.parse(await fs.readFile(dest,'utf8'));};
+  const model=async()=>{await fileAction(page,'#export');await page.locator('#status').filter({hasText:'Layout exported'}).waitFor();return JSON.parse(await fs.readFile(dest,'utf8'));};
   await reset();await start();const mount=await page.locator('[data-slot="ME01"] > circle').boundingBox();await page.mouse.move(mount.x+mount.width/2+60,mount.y+mount.height/2,{steps:5});await page.mouse.up();
   await page.waitForFunction(()=>document.getElementById('angle').value==='-90');assert.equal((await model()).weaponSlots.find(s=>s.id==='ME01').angle,-90);checks.push('physical rightward endpoint yields -90 degrees in inspector and exported model');
   await page.locator('#undo').click();assert.equal(await page.locator('#angle').inputValue(),'0');await page.locator('#redo').click();assert.equal(await page.locator('#angle').inputValue(),'-90');checks.push('Undo and Redo preserve committed angle');

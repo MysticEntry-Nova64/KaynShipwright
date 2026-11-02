@@ -1,10 +1,11 @@
+const {fileAction,revealSettings}=require('./studio-test-helpers.cjs');
 const {_electron:electron}=require('playwright');
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),crypto=require('node:crypto');
 (async()=>{
  const root=path.resolve(__dirname,'..'),results=path.join(root,'test-results');await fs.mkdir(results,{recursive:true});
  const env={...process.env};delete env.ELECTRON_RUN_AS_NODE;
  const app=await electron.launch({args:[process.env.SHIPWRIGHT_EXECUTABLE||root],env,...(process.env.SHIPWRIGHT_EXECUTABLE?{executablePath:process.env.SHIPWRIGHT_EXECUTABLE,args:[]}: {})});
- const page=await app.firstWindow(),errors=[];page.setDefaultTimeout(12000);page.on('pageerror',e=>errors.push(String(e)));page.on('dialog',d=>d.accept());
+ const page=await app.firstWindow(),errors=[];await revealSettings(page);page.setDefaultTimeout(12000);page.on('pageerror',e=>errors.push(String(e)));page.on('dialog',d=>d.accept());
  const tool=async value=>page.locator('#editTool').selectOption(value);
  const action=async(name)=>page.getByRole('menuitem',{name,exact:true}).click();
  const context=async(selector,position)=>{await page.locator(selector).click({button:'right',...(position?{position}: {})});};
@@ -40,7 +41,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
   await context('#canvas',{x:250,y:200});await action('Set shield center here');assert.notEqual(Number(await field('Shield forward').inputValue()),shieldForward);
   await context('#canvas',{x:250,y:200});await action('Disable shield circle (radius 0)');assert.equal(await field('Shield radius').inputValue(),'0');await page.locator('#undo').click();
   await tool('bounds');const count=await page.locator('[data-geometry="vertex"]').count();assert.equal(count,24);
-  await context('#canvas',{x:100,y:250});await action('Insert vertex on nearest edge');assert.equal(await page.locator('[data-geometry="vertex"]').count(),25);
+  const edgeMid=await page.evaluate(()=>{const a=document.querySelector('[data-geometry="vertex"][data-index="0"]'),b=document.querySelector('[data-geometry="vertex"][data-index="1"]'),A=a.getBoundingClientRect(),B=b.getBoundingClientRect();return {x:(A.x+A.width/2+B.x+B.width/2)/2,y:(A.y+A.height/2+B.y+B.height/2)/2};});await page.mouse.click(edgeMid.x,edgeMid.y,{button:'right'});await action('Insert vertex on nearest edge');assert.equal(await page.locator('[data-geometry="vertex"]').count(),25);
   await context('[data-geometry="vertex"][data-index="0"]');await action('Delete vertex');assert.equal(await page.locator('[data-geometry="vertex"]').count(),24);await page.locator('#undo').click();assert.equal(await page.locator('[data-geometry="vertex"]').count(),25);
   await drag('[data-geometry="vertex"][data-index="0"]',0,-3);await page.locator('#undo').click();
   await context('#canvas',{x:100,y:150});await action('Select collision radius');await change('Collision radius',190);
@@ -50,12 +51,12 @@ const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=r
   const savePath=path.join(results,'geometry.shipwright.json');await app.evaluate(({dialog},filePath)=>{dialog.showSaveDialog=async()=>({filePath,canceled:false});},savePath);await page.locator('#save').click();await page.locator('#status').filter({hasText:'Project saved'}).waitFor();
   const saved=JSON.parse(await fs.readFile(savePath,'utf8'));assert.equal(saved.hull.engineSlots.length,4);assert.equal(saved.hull.bounds.length/2,25);assert.equal(saved.hull.collisionRadius,190);
   await app.evaluate(({dialog},folder)=>{dialog.showOpenDialog=async()=>({filePaths:[folder],canceled:false});},results);
-  await page.locator('#exportPackage').click();await page.locator('#status').filter({hasText:'Design package exported:'}).waitFor();
+  await fileAction(page,'#exportPackage');await page.locator('#packageName').fill('Geometry fixture');await page.locator('#packageConfirm').click();await page.locator('#status').filter({hasText:'Design package exported:'}).waitFor();
   const status=await page.locator('#status').textContent(),folder=status.slice('Design package exported: '.length),manifest=JSON.parse(await fs.readFile(path.join(folder,'manifest.json'),'utf8'));
-  const expectedVersion=require('../package.json').version;assert.equal(manifest.toolVersion,expectedVersion);assert.ok(path.basename(folder).includes('-design-V'+expectedVersion+'-'));assert.ok((await fs.readFile(path.join(folder,'README.txt'),'utf8')).includes('Shipwright V'+expectedVersion));assert.equal(manifest.gameVerified,false);assert.equal(manifest.validation.errors.length,0);
+  const expectedVersion=require('../package.json').version;assert.equal(manifest.toolVersion,expectedVersion);assert.equal(path.basename(folder),'Geometry-fixture');assert.ok((await fs.readFile(path.join(folder,'README.txt'),'utf8')).includes('Shipwright V'+expectedVersion));assert.equal(manifest.gameVerified,false);assert.equal(manifest.validation.errors.length,0);
   for(const item of manifest.files){const bytes=await fs.readFile(path.join(folder,item.path));assert.equal(bytes.length,item.bytes);assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),item.sha256);}
   assert.deepEqual(JSON.parse(await fs.readFile(path.join(folder,'data/hulls/kayn_verdant.ship'),'utf8')),saved.hull);
-  const projectFile=path.join(folder,'kayn_verdant.shipwright.json');await page.locator('#projectOpen').click({noWaitAfter:true});await page.locator('#fileInput').setInputFiles(projectFile);await page.locator('#status').filter({hasText:'Loaded Verdant'}).waitFor();await tool('engines');assert.equal(await page.locator('[data-geometry="engine"]').count(),4);
+  const projectFile=path.join(folder,'projects/kayn_verdant.shipwright.json');await fileAction(page,'#projectOpen');await page.locator('#fileInput').setInputFiles(projectFile);await page.locator('#status').filter({hasText:'Loaded Verdant'}).waitFor();await tool('engines');assert.equal(await page.locator('[data-geometry="engine"]').count(),4);
   // Exercise actual asynchronous save ownership with a delayed native dialog.
   const delayed=path.join(results,'earlier-revision.shipwright.json');await app.evaluate(({dialog},filePath)=>{dialog.showSaveDialog=()=>new Promise(resolve=>{global.resolveShipwrightSave=()=>resolve({filePath,canceled:false});});},delayed);
   await page.locator('#save').click();await page.locator('#name').fill('Newer edit');await page.locator('#name').press('Tab');await app.evaluate(()=>global.resolveShipwrightSave());await page.locator('#status').filter({hasText:'current edits remain unsaved'}).waitFor();assert.equal(JSON.parse(await fs.readFile(delayed,'utf8')).hull.hullName,'Verdant');assert.equal(await page.locator('#name').inputValue(),'Newer edit');

@@ -1,24 +1,11 @@
-# Version 1.0.3
+# Shipwright 1.0.3 — Scaling and serialization checks
 
-Scaling rejects invalid source values before JSON copying and nonfinite derived
-weapon-screen or polygon arithmetic before publishing the candidate. Rejected
-scales preserve the original document. Added scaling boundary/export checks.
+Validates resize input before copying, rejects nonfinite derived geometry and preserves the original model when scaling fails. Adds version/encoding guards and aim diagnostics.
 
-Added focused aim contracts, optional input-event tracing, structured UI failure
-reports and a debugging guide with expected results and competing hypotheses.
-Desktop feature suites can explicitly select a packaged/installed executable.
+## Decisions
 
-The intermittent original cold-start aim-drag failure remains unresolved. One aim
-and one preceding movement failure occurred across12original cold launches;
-72instrumented cold launches passed. Passing reruns do not prove an app fix or
-that the original failure is exclusively a test issue. See debugging.md.
+I found that finite stored inputs can still overflow derived arithmetic, and JSON copying can hide invalid numbers. I wanted rejection to happen before data changes.
 
-Corrected two legacy degree-symbol bytes in the UTF8HTML and added a fatal-decode
-regression check.
+## Archive status
 
-Version labels now read1.0.3in package metadata, app title/header, preview and
-exported design manifest/README/folder name. Export tests derive expected version
-from package metadata and packaged smoke checks visible as well as running version.
-
-Verification and installation results are recorded in verification.md. No
-Starsector compatibility/performance or zero-error guarantee is implied.
+Retained version archive, published retrospectively. The archive identifies its application payload and checksum; it does not inherit the 2.0.0 regression results. Historical runtime snapshots may include compiled JavaScript rather than the original TypeScript source. Earlier behavior and known limitations are preserved for comparison. Use 2.0.0 for current work.
