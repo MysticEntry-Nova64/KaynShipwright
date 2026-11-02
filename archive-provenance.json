@@ -1,0 +1,102 @@
+{
+  "version": "0.1.4",
+  "applicationPayloadSHA256": "139fafbc769c8f495ae928e689e3c2f05a0116b65870224e39d880a0c9f1cc74",
+  "originalPayloadSHA256": "139fafbc769c8f495ae928e689e3c2f05a0116b65870224e39d880a0c9f1cc74",
+  "retrospective": true,
+  "sourceKind": "compiled-runtime-snapshot",
+  "runtimeFiles": [
+    {
+      "path": ".gitignore",
+      "bytes": 44,
+      "sha256": "d3c4d4a606b021e2e7a9f3a6f6a1f6ebae985989816799bf617a1361bd185174"
+    },
+    {
+      "path": "app.js",
+      "bytes": 25063,
+      "sha256": "d56a813631fbc864380daca58faa88df50c38753428de1141ac276a2f8692ba7"
+    },
+    {
+      "path": "assets\\class-references.json",
+      "bytes": 741,
+      "sha256": "0ad50bfd85be2a608c28ef2510db6ca021a925f417def41ceb52f1db8df0118f"
+    },
+    {
+      "path": "assets\\eagle-reference.png",
+      "bytes": 60537,
+      "sha256": "e9ed43f56cb3c6ac731c46effaba6117f705096629fd2709482a4c95575b3d96"
+    },
+    {
+      "path": "assets\\hammerhead-reference.json",
+      "bytes": 199,
+      "sha256": "b2a54eabaa537fec2e80f035958a1cd17a266d8e151844d3a09f02b18ac3ee9a"
+    },
+    {
+      "path": "assets\\hammerhead-reference.png",
+      "bytes": 34919,
+      "sha256": "54c67a9a6bb54297beb17bb5cce68d8c8cbeb18f6a6a11c17a914b732c871e4f"
+    },
+    {
+      "path": "assets\\lasher-reference.png",
+      "bytes": 12400,
+      "sha256": "b79bb7c13ba4c836844fb44cdfa479868ead7e453e54c270523bba515b91775a"
+    },
+    {
+      "path": "assets\\onslaught-reference.png",
+      "bytes": 191978,
+      "sha256": "982665f67483c6e254825921fa0aa850d7f8bea736055f14b8161ac629d01903"
+    },
+    {
+      "path": "assets\\talon-reference.png",
+      "bytes": 1353,
+      "sha256": "61ec148b93fb6969061b079c956df9541ff10f22dfedb1c1cc2c5d0eb6030235"
+    },
+    {
+      "path": "assets\\verdant.png",
+      "bytes": 92756,
+      "sha256": "07e224fda2ff8b98392acaa97ad751a0ef276c7e644c201c1f813638dbd67416"
+    },
+    {
+      "path": "assets\\verdant.ship",
+      "bytes": 6571,
+      "sha256": "d99093e810cb17c087b3ecc388467c6acc49c1712f2af3bd40c4f3dfc92cf169"
+    },
+    {
+      "path": "build.mjs",
+      "bytes": 139,
+      "sha256": "bc966ded077287e7949ad46ea5a1288cc99a3ac132b8c51fdb6dae52b208e9b2"
+    },
+    {
+      "path": "index.html",
+      "bytes": 5418,
+      "sha256": "9ddb5e6decc0a3e4b72593d35c9bc40dc35213ddcdc761967a457bf69dfed406"
+    },
+    {
+      "path": "main.cjs",
+      "bytes": 1262,
+      "sha256": "5b3805a32821d95e5f78e66b1ce3e4313a24f085aff068a70effafc5d075c4d6"
+    },
+    {
+      "path": "package.json",
+      "bytes": 190,
+      "sha256": "bdb26b1224d2a0bcc2fbb7b552a3ef4479b01636a904e20071bf4063a7e34188"
+    },
+    {
+      "path": "preload.cjs",
+      "bytes": 158,
+      "sha256": "4e4c03cffb3a8cf3e4d20c05a01fe07b725ba50af79775d2841cfb9c99531037"
+    },
+    {
+      "path": "style.css",
+      "bytes": 4281,
+      "sha256": "07da479130fbace81c91f8f7d01ece800edcf3b6199890ebf668b19c60b226b1"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 225,
+      "sha256": "d719a278593efbd0cf42c89d490b0b4dd154df62286d4c2235103ae711fc7e33"
+    }
+  ],
+  "excludedNonruntimeFiles": [
+    "README.md"
+  ]
+}
