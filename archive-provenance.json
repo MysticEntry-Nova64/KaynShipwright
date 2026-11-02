@@ -1,0 +1,71 @@
+{
+  "version": "0.1.0",
+  "applicationPayloadSHA256": "a0490623a82c2e15795359e0f672c23d9fd621a861fa0d671a387eed744e4317",
+  "originalPayloadSHA256": "237591ed867633781fd76b661b0e58f8c2fb2d652b17bc4a29a5865fbd9bf297",
+  "retrospective": true,
+  "sourceKind": "compiled-runtime-snapshot",
+  "runtimeFiles": [
+    {
+      "path": ".gitignore",
+      "bytes": 44,
+      "sha256": "d3c4d4a606b021e2e7a9f3a6f6a1f6ebae985989816799bf617a1361bd185174"
+    },
+    {
+      "path": "app.js",
+      "bytes": 21756,
+      "sha256": "e23461b00991de67ab364433ca455febcdb8fa4d394c6f60a5d772ec9efcc18e"
+    },
+    {
+      "path": "assets\\verdant.png",
+      "bytes": 92756,
+      "sha256": "07e224fda2ff8b98392acaa97ad751a0ef276c7e644c201c1f813638dbd67416"
+    },
+    {
+      "path": "assets\\verdant.ship",
+      "bytes": 6571,
+      "sha256": "d99093e810cb17c087b3ecc388467c6acc49c1712f2af3bd40c4f3dfc92cf169"
+    },
+    {
+      "path": "build.mjs",
+      "bytes": 139,
+      "sha256": "bc966ded077287e7949ad46ea5a1288cc99a3ac132b8c51fdb6dae52b208e9b2"
+    },
+    {
+      "path": "index.html",
+      "bytes": 4350,
+      "sha256": "0e3ca8fbbe0b1d10ce2c0c706c38b112147dcefc0883c120338a683c93a67830"
+    },
+    {
+      "path": "main.cjs",
+      "bytes": 1262,
+      "sha256": "5b3805a32821d95e5f78e66b1ce3e4313a24f085aff068a70effafc5d075c4d6"
+    },
+    {
+      "path": "package.json",
+      "bytes": 190,
+      "sha256": "8270930f3e3d4e7ee089e60ccfe07f42c9f47c01a72b304dd915ce30b2e70d1f"
+    },
+    {
+      "path": "preload.cjs",
+      "bytes": 158,
+      "sha256": "4e4c03cffb3a8cf3e4d20c05a01fe07b725ba50af79775d2841cfb9c99531037"
+    },
+    {
+      "path": "style.css",
+      "bytes": 3539,
+      "sha256": "9a473d39e8f74d6b51176751fb4489e19bb4f1f817bc7e82d1776780743a6f95"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 225,
+      "sha256": "d719a278593efbd0cf42c89d490b0b4dd154df62286d4c2235103ae711fc7e33"
+    }
+  ],
+  "excludedNonruntimeFiles": [
+    "README.md",
+    "test-results\\editor.png",
+    "test-results\\roundtrip.ship",
+    "test-results\\saved.shipwright.json",
+    "test-results\\ui.json"
+  ]
+}
