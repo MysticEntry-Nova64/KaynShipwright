@@ -1,0 +1,77 @@
+{
+  "version": "0.1.1",
+  "applicationPayloadSHA256": "c8636e6a295574c95cbede5cc2affc79e3b2d830260108c1edc0dc9857a062db",
+  "originalPayloadSHA256": "c8636e6a295574c95cbede5cc2affc79e3b2d830260108c1edc0dc9857a062db",
+  "retrospective": true,
+  "sourceKind": "compiled-runtime-snapshot",
+  "runtimeFiles": [
+    {
+      "path": ".gitignore",
+      "bytes": 44,
+      "sha256": "d3c4d4a606b021e2e7a9f3a6f6a1f6ebae985989816799bf617a1361bd185174"
+    },
+    {
+      "path": "app.js",
+      "bytes": 25014,
+      "sha256": "b4d9b6181ab403eb649a4d3a240dda392b106ccccd0f996bb895038c62aff4cf"
+    },
+    {
+      "path": "assets\\hammerhead-reference.json",
+      "bytes": 199,
+      "sha256": "b2a54eabaa537fec2e80f035958a1cd17a266d8e151844d3a09f02b18ac3ee9a"
+    },
+    {
+      "path": "assets\\hammerhead-reference.png",
+      "bytes": 34919,
+      "sha256": "54c67a9a6bb54297beb17bb5cce68d8c8cbeb18f6a6a11c17a914b732c871e4f"
+    },
+    {
+      "path": "assets\\verdant.png",
+      "bytes": 92756,
+      "sha256": "07e224fda2ff8b98392acaa97ad751a0ef276c7e644c201c1f813638dbd67416"
+    },
+    {
+      "path": "assets\\verdant.ship",
+      "bytes": 6571,
+      "sha256": "d99093e810cb17c087b3ecc388467c6acc49c1712f2af3bd40c4f3dfc92cf169"
+    },
+    {
+      "path": "build.mjs",
+      "bytes": 139,
+      "sha256": "bc966ded077287e7949ad46ea5a1288cc99a3ac132b8c51fdb6dae52b208e9b2"
+    },
+    {
+      "path": "index.html",
+      "bytes": 4556,
+      "sha256": "2ec23cbb9c1a0b01f726db756a2ac205d19028ee899cd93b35ac81118a79770a"
+    },
+    {
+      "path": "main.cjs",
+      "bytes": 1262,
+      "sha256": "5b3805a32821d95e5f78e66b1ce3e4313a24f085aff068a70effafc5d075c4d6"
+    },
+    {
+      "path": "package.json",
+      "bytes": 190,
+      "sha256": "52114ec786e3b926489604321fe5dad2aef729b454b8bf45767195772660b867"
+    },
+    {
+      "path": "preload.cjs",
+      "bytes": 158,
+      "sha256": "4e4c03cffb3a8cf3e4d20c05a01fe07b725ba50af79775d2841cfb9c99531037"
+    },
+    {
+      "path": "style.css",
+      "bytes": 3863,
+      "sha256": "2cd8c6ae64cb430b656b551c1c6a4a286cbdfd17364bc6c1bb2e15e29f1e822a"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 225,
+      "sha256": "d719a278593efbd0cf42c89d490b0b4dd154df62286d4c2235103ae711fc7e33"
+    }
+  ],
+  "excludedNonruntimeFiles": [
+    "README.md"
+  ]
+}
