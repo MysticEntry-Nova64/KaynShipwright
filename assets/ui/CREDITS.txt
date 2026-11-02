@@ -1,0 +1,9 @@
+select-folder-guide.png: supplied by the user on 1 November 2026; copied unchanged
+from codex-clipboard-4d8dbf54-726a-4a1c-ac42-0d9969fb789a.png. The larger ssstitled.png
+was a placement reference, not an application asset.
+
+location-assistant.png: generated on 1 November 2026 using the image-generation
+tool for the user's requested winking anime assistant. Transparent PNG, bundled
+locally. Original retained under the Codex generated_images directory.
+
+Ship-and-arrow button icons: project-native SVG shapes in index.html.
