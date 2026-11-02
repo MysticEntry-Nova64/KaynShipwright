@@ -1,0 +1,133 @@
+{
+  "version": "1.1.0",
+  "applicationPayloadSHA256": "b43b715242c505d8c41df0fa023f4f9ca2a3ac60932258cb6b43582f5ba99551",
+  "originalPayloadSHA256": "c2b651892fb0f28369160fb0c92ea7338a25b82c842690f3f85ec34f45ec4de8",
+  "retrospective": true,
+  "sourceKind": "compiled-runtime-snapshot",
+  "runtimeFiles": [
+    {
+      "path": ".gitignore",
+      "bytes": 106,
+      "sha256": "9881fc362da805c7977c8537f884e012dd19a43cba1d3fe6da22d01328f9d7ec"
+    },
+    {
+      "path": "app.js",
+      "bytes": 61736,
+      "sha256": "b50e8bb3388bc8db2a2c9b6fd5e521a3cd8a268b2b7b671adb01fba2b977b54a"
+    },
+    {
+      "path": "assets\\class-references.json",
+      "bytes": 741,
+      "sha256": "0ad50bfd85be2a608c28ef2510db6ca021a925f417def41ceb52f1db8df0118f"
+    },
+    {
+      "path": "assets\\eagle-reference.png",
+      "bytes": 60537,
+      "sha256": "e9ed43f56cb3c6ac731c46effaba6117f705096629fd2709482a4c95575b3d96"
+    },
+    {
+      "path": "assets\\hammerhead-reference.json",
+      "bytes": 199,
+      "sha256": "b2a54eabaa537fec2e80f035958a1cd17a266d8e151844d3a09f02b18ac3ee9a"
+    },
+    {
+      "path": "assets\\hammerhead-reference.png",
+      "bytes": 34919,
+      "sha256": "54c67a9a6bb54297beb17bb5cce68d8c8cbeb18f6a6a11c17a914b732c871e4f"
+    },
+    {
+      "path": "assets\\lasher-reference.png",
+      "bytes": 12400,
+      "sha256": "b79bb7c13ba4c836844fb44cdfa479868ead7e453e54c270523bba515b91775a"
+    },
+    {
+      "path": "assets\\onslaught-reference.png",
+      "bytes": 191978,
+      "sha256": "982665f67483c6e254825921fa0aa850d7f8bea736055f14b8161ac629d01903"
+    },
+    {
+      "path": "assets\\talon-reference.png",
+      "bytes": 1353,
+      "sha256": "61ec148b93fb6969061b079c956df9541ff10f22dfedb1c1cc2c5d0eb6030235"
+    },
+    {
+      "path": "assets\\verdant.png",
+      "bytes": 92756,
+      "sha256": "07e224fda2ff8b98392acaa97ad751a0ef276c7e644c201c1f813638dbd67416"
+    },
+    {
+      "path": "assets\\verdant.ship",
+      "bytes": 6571,
+      "sha256": "d99093e810cb17c087b3ecc388467c6acc49c1712f2af3bd40c4f3dfc92cf169"
+    },
+    {
+      "path": "build.mjs",
+      "bytes": 269,
+      "sha256": "b1280f3d5a880419a2600e0e62cd2eeffd3d79551cb2d1f22ff8b8119d41eb8c"
+    },
+    {
+      "path": "core-node.cjs",
+      "bytes": 9169,
+      "sha256": "d9593e7c02c70a1f8b0b88dcf3d08662729aac0fa411b3628efd89958c76046f"
+    },
+    {
+      "path": "import-service.cjs",
+      "bytes": 8264,
+      "sha256": "8cfd5d218c420101bb00d3a0307d7472bb4a4f47acf299a5bc0dc5fc4223bd43"
+    },
+    {
+      "path": "index.html",
+      "bytes": 7793,
+      "sha256": "c0a7e9be86a1b6b1c06062c258bf968fc6aab6d13ae1d93626badd1e6008d002"
+    },
+    {
+      "path": "main.cjs",
+      "bytes": 4406,
+      "sha256": "4931a8d1361bb57863840d7dbbf16c49c5bdd8156801d2d41576341a22fab819"
+    },
+    {
+      "path": "package-service.cjs",
+      "bytes": 3877,
+      "sha256": "3298b48b9cc4442b5c901e1ae1da32a4328c2cc313bfe8cb4e42acbe4d6e1fb4"
+    },
+    {
+      "path": "package.json",
+      "bytes": 190,
+      "sha256": "dd7921e65cf1b817ad5948aece8e96f4b64cbdc583e7d0f8854a53a70f1fd36e"
+    },
+    {
+      "path": "preload.cjs",
+      "bytes": 530,
+      "sha256": "65aad93fed7b0746066f3a3709871829b43d874d2ebb926512e345c84fcb924b"
+    },
+    {
+      "path": "save-service.cjs",
+      "bytes": 1223,
+      "sha256": "e7a14615d29979b8bdc0f7d6efc8de00b07094593445e9163eb35b6062db6a9a"
+    },
+    {
+      "path": "style.css",
+      "bytes": 6490,
+      "sha256": "27826dc176114d6356c98b694d603bc4d275907b3970a353678ac40f2084210b"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 225,
+      "sha256": "d719a278593efbd0cf42c89d490b0b4dd154df62286d4c2235103ae711fc7e33"
+    }
+  ],
+  "excludedNonruntimeFiles": [
+    "README.md",
+    "docs\\debugging.md",
+    "docs\\gesture-and-save-patterns.md",
+    "docs\\images\\README.md",
+    "docs\\images\\engine-editor.png",
+    "docs\\images\\geometry-tools.png",
+    "docs\\images\\weapon-editor.png",
+    "docs\\import-from-starsector.md",
+    "docs\\release-1.0.3.md",
+    "docs\\release-1.1.0.md",
+    "docs\\verification.md",
+    "scripts\\import-local-assets.cjs"
+  ]
+}

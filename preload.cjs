@@ -1,2 +1,2 @@
 const {contextBridge,ipcRenderer}=require('electron');
-contextBridge.exposeInMainWorld('desktop',{save:(name,text)=>ipcRenderer.invoke('save',{name,text}),exportPackage:(project,preview)=>ipcRenderer.invoke('export-package',{project,preview})});
+contextBridge.exposeInMainWorld('desktop',{libraryList:()=>ipcRenderer.invoke('ship-library-list'),libraryGet:id=>ipcRenderer.invoke('ship-library-get',id),scanShips:()=>ipcRenderer.invoke('ship-source-scan'),previewShip:id=>ipcRenderer.invoke('ship-source-preview',id),importShip:id=>ipcRenderer.invoke('ship-library-add',id),save:(name,text)=>ipcRenderer.invoke('save',{name,text}),exportPackage:(project,preview)=>ipcRenderer.invoke('export-package',{project,preview})});
