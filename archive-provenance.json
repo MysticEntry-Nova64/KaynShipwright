@@ -1,0 +1,164 @@
+{
+  "version": "1.1.1",
+  "applicationPayloadSHA256": "45e04f4b8a6c9cb2d8b531172194eff15a5553af26b3b36a41027a659c1ed4f4",
+  "originalPayloadSHA256": "427c6c826ad0ac3b48c4804b245a1e103bf42b913b3bcd70cee41e37d9fdb6a4",
+  "retrospective": true,
+  "sourceKind": "compiled-runtime-snapshot",
+  "runtimeFiles": [
+    {
+      "path": ".gitignore",
+      "bytes": 106,
+      "sha256": "9881fc362da805c7977c8537f884e012dd19a43cba1d3fe6da22d01328f9d7ec"
+    },
+    {
+      "path": "app.js",
+      "bytes": 68676,
+      "sha256": "dbadc13982d609cef35972762e3ad53840a72584af5c340af2929d0d04751e31"
+    },
+    {
+      "path": "assets\\class-references.json",
+      "bytes": 741,
+      "sha256": "0ad50bfd85be2a608c28ef2510db6ca021a925f417def41ceb52f1db8df0118f"
+    },
+    {
+      "path": "assets\\eagle-reference.png",
+      "bytes": 60537,
+      "sha256": "e9ed43f56cb3c6ac731c46effaba6117f705096629fd2709482a4c95575b3d96"
+    },
+    {
+      "path": "assets\\hammerhead-reference.json",
+      "bytes": 199,
+      "sha256": "b2a54eabaa537fec2e80f035958a1cd17a266d8e151844d3a09f02b18ac3ee9a"
+    },
+    {
+      "path": "assets\\hammerhead-reference.png",
+      "bytes": 34919,
+      "sha256": "54c67a9a6bb54297beb17bb5cce68d8c8cbeb18f6a6a11c17a914b732c871e4f"
+    },
+    {
+      "path": "assets\\lasher-reference.png",
+      "bytes": 12400,
+      "sha256": "b79bb7c13ba4c836844fb44cdfa479868ead7e453e54c270523bba515b91775a"
+    },
+    {
+      "path": "assets\\onslaught-reference.png",
+      "bytes": 191978,
+      "sha256": "982665f67483c6e254825921fa0aa850d7f8bea736055f14b8161ac629d01903"
+    },
+    {
+      "path": "assets\\talon-reference.png",
+      "bytes": 1353,
+      "sha256": "61ec148b93fb6969061b079c956df9541ff10f22dfedb1c1cc2c5d0eb6030235"
+    },
+    {
+      "path": "assets\\verdant.png",
+      "bytes": 92756,
+      "sha256": "07e224fda2ff8b98392acaa97ad751a0ef276c7e644c201c1f813638dbd67416"
+    },
+    {
+      "path": "assets\\verdant.ship",
+      "bytes": 6571,
+      "sha256": "d99093e810cb17c087b3ecc388467c6acc49c1712f2af3bd40c4f3dfc92cf169"
+    },
+    {
+      "path": "build.mjs",
+      "bytes": 269,
+      "sha256": "b1280f3d5a880419a2600e0e62cd2eeffd3d79551cb2d1f22ff8b8119d41eb8c"
+    },
+    {
+      "path": "core-node.cjs",
+      "bytes": 10110,
+      "sha256": "5cc12b67bb0f20bc6165695a33c6a5441d99c72e5f7e7a4bb6de0c7324b94ed9"
+    },
+    {
+      "path": "import-service.cjs",
+      "bytes": 416,
+      "sha256": "0e8fef83088c33557c1c182cf1145984974c57bebc02bfc5375d42884442ec31"
+    },
+    {
+      "path": "index.html",
+      "bytes": 7799,
+      "sha256": "bf0653c93553171683cc041a1aebffba8a50beff9a2a802db097a5c1bbc23997"
+    },
+    {
+      "path": "main.cjs",
+      "bytes": 2398,
+      "sha256": "1faf920181129e356ca18d3598c20081c3477add5fbaea0c2c912db0730d5e4b"
+    },
+    {
+      "path": "native\\assets.cjs",
+      "bytes": 1175,
+      "sha256": "010843e6a681470d0434b51663b0a8dba0cd924d019382d9861ced4cac0c4cd5"
+    },
+    {
+      "path": "native\\file-io.cjs",
+      "bytes": 1263,
+      "sha256": "c2c750c5fa9f747a057f769fd238a7b2ba14ea68124cbd6837985ee24c925b80"
+    },
+    {
+      "path": "native\\import-ipc.cjs",
+      "bytes": 3153,
+      "sha256": "c0776adace39177174a858a0dc87c74a015a4065ebbefc97773636a7dad72407"
+    },
+    {
+      "path": "native\\ship-format.cjs",
+      "bytes": 1615,
+      "sha256": "1c9b8a7ecf261a95baee0f85bfdd2538f4b7137fbdd6c4e3445af05959e01c03"
+    },
+    {
+      "path": "native\\ship-library.cjs",
+      "bytes": 4422,
+      "sha256": "bca3dfec62e2bbfac2b9fce688ff1b0d3f877f4cc230b95a40902f4ae42abe22"
+    },
+    {
+      "path": "native\\ship-source.cjs",
+      "bytes": 6000,
+      "sha256": "6044c98035c96a2ed1b4ad0c19aac9b26157abb35a9135853514ea94ddc31ba1"
+    },
+    {
+      "path": "package-service.cjs",
+      "bytes": 3741,
+      "sha256": "5c815dcbdd5f499cb394a959d8e25e6542cee18d0330e70cb9490948bb99d7b3"
+    },
+    {
+      "path": "package.json",
+      "bytes": 190,
+      "sha256": "a7c38f7767797913bc46bbd86b023eeabc6b0107b36db83600e66877372248c9"
+    },
+    {
+      "path": "preload.cjs",
+      "bytes": 603,
+      "sha256": "737920ade3a81ff0828c5005be5dabc4fb7e053bea798804218ce7a6eca86de2"
+    },
+    {
+      "path": "save-service.cjs",
+      "bytes": 1407,
+      "sha256": "75e52df68b223d954407082cbfc9b84220ad25b44e9510465487ed1ddce34339"
+    },
+    {
+      "path": "style.css",
+      "bytes": 6490,
+      "sha256": "27826dc176114d6356c98b694d603bc4d275907b3970a353678ac40f2084210b"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 225,
+      "sha256": "d719a278593efbd0cf42c89d490b0b4dd154df62286d4c2235103ae711fc7e33"
+    }
+  ],
+  "excludedNonruntimeFiles": [
+    "README.md",
+    "docs\\debugging.md",
+    "docs\\gesture-and-save-patterns.md",
+    "docs\\images\\README.md",
+    "docs\\images\\engine-editor.png",
+    "docs\\images\\geometry-tools.png",
+    "docs\\images\\weapon-editor.png",
+    "docs\\import-from-starsector.md",
+    "docs\\release-1.0.3.md",
+    "docs\\release-1.1.0.md",
+    "docs\\release-1.1.1.md",
+    "docs\\verification.md",
+    "scripts\\import-local-assets.cjs"
+  ]
+}
