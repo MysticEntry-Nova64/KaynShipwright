@@ -1,0 +1,34 @@
+{
+  "intent": "Fixed dialog-state artwork, no appearance preference",
+  "location": {
+    "file": "wink-144.png",
+    "sha256": "4eb41a4293f3ba576d1a9badd40909ef649bf2ff2dc0e60a202b38fd2270eddc",
+    "size": 144,
+    "sourceArtwork": "Retained v11 Wink canonical export"
+  },
+  "close": {
+    "selection": "Selected working v4 farewell artwork; no further artistic approval assigned",
+    "canonical": {
+      "sha256": "be491f77b43e10fa6929f8fba873aa0877b55346db2fdd595090fb9ba9c77df6",
+      "size": 1254,
+      "sourceArtwork": "Project art archive: salute-goodbye-smile-v4-1254.png"
+    },
+    "files": [
+      {
+        "file": "salute-goodbye-smile-v4-160.png",
+        "sha256": "cdba0ae529e3576291e2c123dfc99325128ac7f26cb6f12b70a398ed9b63e2f9",
+        "size": 160,
+        "bytes": 51435,
+        "sourceArtwork": "Canonical v4 farewell export"
+      },
+      {
+        "file": "salute-goodbye-smile-v4-110.png",
+        "sha256": "50d981df9ed737bd72761b54b8523e7e0ab5798f311bd7cdb4e8cd2d0ee8088c",
+        "size": 110,
+        "bytes": 30783,
+        "sourceArtwork": "Canonical v4 farewell export"
+      }
+    ]
+  },
+  "provenance": "docs/mascot-provenance.md"
+}

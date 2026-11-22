@@ -1,7 +1,15 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("node:path");
 app.setName("Kayn Shipwright");
-app.setPath("userData", process.env.SHIPWRIGHT_USER_DATA || path.join(app.getPath("appData"), "Kayn Shipwright"));
+const normalUserData = path.join(app.getPath("appData"), "Kayn Shipwright");
+const explicitUserData = process.env.SHIPWRIGHT_USER_DATA;
+const hiddenSmoke = process.env.SHIPWRIGHT_TEST_HIDDEN === "1";
+if (hiddenSmoke && (!explicitUserData || !path.isAbsolute(explicitUserData) ||
+    path.resolve(explicitUserData).toLowerCase() === path.resolve(normalUserData).toLowerCase())) {
+  process.stderr.write("Hidden smoke mode requires an explicit absolute non-default SHIPWRIGHT_USER_DATA.\n");
+  process.exit(64);
+}
+app.setPath("userData", explicitUserData || normalUserData);
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -17,9 +25,11 @@ if (!app.requestSingleInstanceLock()) {
   function activatePrimary() {
     pendingInstanceNotice = true;
     if (!win || win.isDestroyed()) return;
-    if (win.isMinimized()) win.restore();
-    win.show();
-    win.focus();
+    if (!hiddenSmoke) {
+      if (win.isMinimized()) win.restore();
+      win.show();
+      win.focus();
+    }
     if (!win.webContents.isLoadingMainFrame()) {
       win.webContents.send("single-instance-notice");
       pendingInstanceNotice = false;
@@ -28,6 +38,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on("second-instance", activatePrimary);
   app.whenReady().then(() => {
     win = new BrowserWindow({
+      show: !hiddenSmoke,
       width: 1440,
       height: 960,
       minWidth: 1080,

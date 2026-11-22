@@ -1,7 +1,7 @@
 {
   "name": "kayn-shipwright",
   "productName": "Kayn Shipwright",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "description": "Offline Starsector ship layout editor",
   "main": "main.cjs",
@@ -9,8 +9,9 @@
     "build": "tsc --noEmit && node build.mjs",
     "start": "npm run build && electron .",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:persistence": "node --experimental-strip-types --test tests/source-format.test.ts tests/save.test.ts tests/save-crash.test.ts tests/recovery-writer.test.ts tests/recovery-disk.test.ts tests/workspace.test.ts",
     "test:ui": "node tests/studio-ui.cjs",
-    "package": "npm run build && electron-packager . \"Kayn Shipwright\" --platform=win32 --arch=x64 --out=release-v2.0.0 --overwrite --asar --ignore=\"^/(release|tests|src|node_modules|work|test-results|docs|scripts)\"",
+    "package": "npm run build && node scripts/package-release.cjs",
     "test:references": "node tests/references.cjs",
     "test:classes": "node tests/classes.cjs",
     "test:geometry": "node tests/geometry-ui.cjs",
@@ -29,7 +30,8 @@
     "test:workspace": "node tests/workspace-ui.cjs",
     "test:close": "node tests/close-ui.cjs",
     "test:soak": "node tests/release-soak.cjs",
-    "test:memory": "node tests/recovery-memory-ui.cjs"
+    "test:memory": "node tests/recovery-memory-ui.cjs",
+    "test:artwork": "node tests/state-artwork-ui.cjs"
   },
   "devDependencies": {
     "@electron/packager": "20.3.0",

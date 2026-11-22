@@ -1,4 +1,5 @@
 import { installStudioUI } from "./studio-ui";
+import { installDialogArtwork } from "./dialog-artwork";
 import {choosePackageMetadata,packageSettings,restorePackageSettings} from "./package-dialog";
 import { RecoveryWriter } from "./recovery-writer";
 import { outlineForProject } from "./auto-outline";
@@ -65,6 +66,7 @@ declare global {
 }
 
 installStartup(window.desktop);
+installDialogArtwork();
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
 
@@ -156,7 +158,13 @@ document.addEventListener('package-settings-changed',()=>scheduleRecovery());
 function scheduleRecovery(){if(!workspaceReady)return;clearTimeout(recoveryTimer);$('workspaceState').textContent='Updating workspace recovery…';recoveryTimer=setTimeout(()=>{recoveryTimer=undefined;try{persistWorkspace();}catch(error){$('workspaceState').textContent='Recovery failed — save projects: '+error;}},350);}
 function drawDropped(){
  if(project)studioUI.fileState(session.dirty);
- const panel=$('droppedPanel'),list=$('droppedDesigns');panel.hidden=!droppedDesigns.length;list.replaceChildren();
+ const panel=$('droppedPanel'),list=$('droppedDesigns');panel.hidden=!droppedDesigns.length;
+ // Chromium may retain removed tab nodes in its cached layout. Those nodes no
+ // longer own a document, so release callbacks that capture its project/history.
+ for(const previous of Array.from(list.children)){
+  const button=previous as HTMLButtonElement;button.onclick=null;button.oncontextmenu=null;
+ }
+ list.replaceChildren();
  droppedDesigns.forEach((d,i)=>{
   const button=document.createElement('button');button.type='button';button.dataset.dropIndex=String(i);button.classList.toggle('active',i===activeDrop);
   const img=document.createElement('img');img.src=d.project.image;img.alt='';const label=document.createElement('span');label.textContent=d.project.hull.hullName+' · '+d.project.hull.hullSize+(d.session.dirty?' *':'');button.append(img,label);button.onclick=()=>openDropped(i);

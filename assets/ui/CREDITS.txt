@@ -1,8 +1,7 @@
 UI artwork
 
-location-assistant.png: generated for the winking Shipwright assistant.
-close-assistant.png: generated for the matching saluting close-dialog assistant.
-Both use transparent backgrounds and are bundled as static images.
+The supplied folder-selection guide is unchanged. Ship-and-arrow SVG icons are project-native shapes in index.html.
 
-select-folder-guide.png: supplied folder-selection guide, used unchanged.
-Ship-and-arrow icons: project-native SVG shapes in index.html.
+state-artwork-2026-11-22 contains the fixed v11 Wink144 Oops guide and v4 farewell salute160/110. See docs/mascot-provenance.md and the asset manifest for exact identities. The farewell uses a user-authorized mouth-only refinement of the retained salute. It remains selected working artwork, not new artistic approval.
+
+Previous location/close PNGs and expression studies are preserved in source/art history; only the current state-specific runtime exports are packaged.

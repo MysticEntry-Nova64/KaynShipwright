@@ -11,3 +11,23 @@ test('default discovery is bounded, persisted and reused by the next launch',asy
 test('missing defaults request selection; invalid selection preserves saved state',async()=>{const x=await fixture();try{const store=createLocationStore(x.user,[]);assert.equal((await store.get()).needsSelection,true);await assert.rejects(()=>store.set(x.dir),/installation folder/);assert.equal((await store.get()).installation,null);await store.set(path.join(x.game,'starsector-core'));const before=await fs.readFile(path.join(x.user,'starsector-location.json'));await assert.rejects(()=>store.set(path.join(x.dir,'absent')),/installation folder/);assert.deepEqual(await fs.readFile(path.join(x.user,'starsector-location.json')),before);}finally{await fs.rm(x.dir,{recursive:true,force:true});}});
 test('browsing a mod cannot replace the remembered game installation',async()=>{const x=await fixture();try{const store=createLocationStore(x.user,[x.game]);await store.get();const mod=path.join(x.dir,'Mod');await fs.mkdir(path.join(mod,'data/hulls'),{recursive:true});assert.equal(await store.rememberIfInstallation(mod),null);assert.equal((await store.get()).installation,x.game);assert.equal(await installationRoot('relative/path'),null);}finally{await fs.rm(x.dir,{recursive:true,force:true});}});
 test('removed and malformed saved locations recover without trusting their contents',async()=>{const x=await fixture();try{await fs.mkdir(x.user);await fs.writeFile(path.join(x.user,'starsector-location.json'),'{bad');const first=await createLocationStore(x.user,[]).get();assert.ok(first.warning);assert.ok(first.needsSelection);await fs.writeFile(path.join(x.user,'starsector-location.json'),JSON.stringify({version:1,installation:path.join(x.dir,'old')}));const recovered=await createLocationStore(x.user,[x.game]).get();assert.equal(recovered.installation,x.game);}finally{await fs.rm(x.dir,{recursive:true,force:true});}});
+
+test('unavailable discovery candidate cannot poison initialization or manual selection',async(t)=>{
+ const x=await fixture(),unavailable=path.join(x.dir,'unavailable-drive');
+ const original=fs.realpath;
+ t.mock.method(fs,'realpath',async(selected:any,...args:any[])=>{
+  if(selected===unavailable)throw Object.assign(new Error('device not ready'),{code:'UNKNOWN'});
+  return (original as any)(selected,...args);
+ });
+ try{
+  const detected=await createLocationStore(x.user,[unavailable,x.game]).get();
+  assert.equal(detected.installation,x.game);assert.ok(detected.warning);
+  const other=path.join(x.dir,'other');
+  await fs.mkdir(other);await fs.writeFile(path.join(other,'starsector-location.json'),JSON.stringify({version:1,installation:unavailable}));
+  const store=createLocationStore(other,[unavailable]);
+  const missing=await store.get();assert.equal(missing.needsSelection,true);assert.ok(missing.warning);
+  assert.equal((await store.get()).installation,null);
+  await store.set(x.game);assert.equal((await store.get()).installation,x.game);
+  await assert.rejects(()=>installationRoot(unavailable),{code:'UNKNOWN'});
+ }finally{t.mock.restoreAll();await fs.rm(x.dir,{recursive:true,force:true});}
+});

@@ -76,7 +76,17 @@ function createLocationStore(directory, candidates = defaultLocations()) {
         warning =
           "The saved Starsector location could not be read. Please select it again.";
     }
-    const remembered = await installationRoot(saved?.installation);
+    // Discovery is best-effort: an empty removable drive or unavailable share
+    // must not poison the cached initialization and block the manual chooser.
+    async function discover(selected) {
+      try {
+        return await installationRoot(selected);
+      } catch {
+        warning = "A Starsector location could not be checked. Please select an available installation folder.";
+        return null;
+      }
+    }
+    const remembered = await discover(saved?.installation);
     if (remembered)
       return (current = {
         installation: remembered,
@@ -84,7 +94,7 @@ function createLocationStore(directory, candidates = defaultLocations()) {
         needsSelection: false,
       });
     for (const candidate of candidates.slice(0, 24)) {
-      const root = await installationRoot(candidate);
+      const root = await discover(candidate);
       if (root) return (current = { ...(await persist(root, true)), warning });
     }
     return (current = {

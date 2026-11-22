@@ -4,7 +4,7 @@
 
 **Build the layout. Keep your place. Review the export.**
 
-Offline Starsector hull-layout editor · Windows x64 · **2.0.0**
+Offline Starsector hull-layout editor · Windows x64 · **2.0.1**
 
 [Download the latest release](https://github.com/MysticEntry-Nova64/KaynShipwright/releases/latest) · [Quick start](#start-building) · [Code map](docs/code-map.md) · [Release history](docs/releases.md)
 
@@ -12,7 +12,13 @@ Offline Starsector hull-layout editor · Windows x64 · **2.0.0**
 
 ![Shipwright 2.0.0: Studio, Canvas focus, geometry editing, export review and the close dialog.](docs/images/shipwright-2.0.0.gif)
 
-Actual packaged-app demonstration · 32.4 seconds · 15 fps. Captions and a progress bar explain each step.
+Historical 2.0.0 packaged-app demonstration · 32.4 seconds · 15 fps. The layout is retained; current artwork is shown below.
+
+| Missing-installation guide | Farewell close dialog |
+| --- | --- |
+| ![2.0.1 Oops guide with fixed v11 Wink](docs/images/shipwright-2.0.1-oops.png) | ![2.0.1 close dialog with v4 farewell salute](docs/images/shipwright-2.0.1-close.png) |
+
+Actual 2.0.1 packaged application captures; legacy appearance preferences do not change these state-specific illustrations.
 
 ## Start building
 
@@ -59,7 +65,7 @@ Right-click the canvas for the tool menu. Escape cancels an active gesture. Save
 
 The close screen offers **Keep editing**, **Close with recovery**, and **Close all**. Keep editing has initial focus; Escape returns to the workspace. Close with recovery waits for the write. Close all explicitly clears the two workspace recovery copies; saved project files stay on disk.
 
-![Saluting assistant and explicit close choices](docs/images/close.png)
+![Current farewell assistant and explicit close choices](docs/images/shipwright-2.0.1-close.png)
 
 Design packages contain editable projects, `.ship` layouts, sprites, labeled previews and one SHA-256 manifest. Combined export creates one pack for all selected designs. Package name/version are export metadata. Recognized packages update through staged publication; unrecognized folders and conflicting paths block replacement.
 
@@ -71,7 +77,11 @@ I thought a larger canvas should remain an easy choice, so Canvas focus reuses t
 
 ## Develop and verify
 
-Use a Node runtime that supports direct TypeScript execution (Node 24.22.1 was used for this release). Dependencies are pinned in `package-lock.json`.
+Use a Node runtime that supports direct TypeScript execution (Node 26.13.0 was used for 2.0.1). Dependencies are pinned in `package-lock.json`.
+
+Follow the [working standards](docs/working-standards.md) for ownership, file preservation,
+failure/recovery checks and evidence. `npm run test:persistence` runs the focused file
+and recovery regressions; the full `npm test` command includes them too.
 
 ```sh
 npm ci
@@ -90,7 +100,7 @@ npm run package
 Then select the actual packaged executable and a disposable profile when running UI checks:
 
 ```powershell
-$env:SHIPWRIGHT_EXECUTABLE = (Resolve-Path 'release-v2.0.0/Kayn Shipwright-win32-x64/Kayn Shipwright.exe').Path
+$env:SHIPWRIGHT_EXECUTABLE = (Resolve-Path 'release-v2.0.1/portable/Kayn Shipwright-win32-x64/Kayn Shipwright.exe').Path
 $env:SHIPWRIGHT_USER_DATA = Join-Path $PWD 'test-results/disposable-profile'
 node tests/studio-ui.cjs
 node tests/geometry-ui.cjs
@@ -101,6 +111,11 @@ node tests/release-soak.cjs
 
 See [verification](docs/verification.md), [functions, triggers and ownership](docs/code-map.md), [import behavior](docs/import-from-starsector.md), and [debugging](docs/debugging.md).
 
-The release passed 63 unit tests and 13 packaged application suites. A separate bounded probe exercised 700 edits, 70 layout switches and 70 export-review cycles; a blocked-write heap probe checked recovery retention. These checks do not establish universal compatibility, long-session leak freedom, full accessibility, power-loss durability, or game verification. A historical intermittent cold aim-drag symptom remains without a confirmed cause; current aim contracts pass. Unsupported source geometry and duplicate IDs are reported rather than silently rewritten.
+The historical 2.0.0 release passed 63 unit tests and 13 packaged application suites. For current 2.0.1 verification (73 unit tests and scoped actual packaged/installed checks), see [2.0.1 release notes](docs/release-2.0.1.md). A separate bounded probe exercised 700 edits, 70 layout switches and 70 export-review cycles; a blocked-write heap probe checked recovery retention. These checks do not establish universal compatibility, long-session leak freedom, full accessibility, power-loss durability, or game verification. A historical intermittent cold aim-drag symptom remains without a confirmed cause; current aim contracts pass. Unsupported source geometry and duplicate IDs are reported rather than silently rewritten.
 
 No source-code license has been selected. Third-party runtime notices remain in the portable app.
+
+The source checkout uses fixed state artwork: v11 Wink for the missing-location
+Oops guide and a separate farewell salute for closing. See
+[dialog artwork](docs/dialog-artwork.md) for provenance and both source and packaged checks.
+Version 2.0.1 keeps the same application identity and workspace format. See [2.0.1 release notes](docs/release-2.0.1.md) for its own verification scope.

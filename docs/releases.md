@@ -1,9 +1,10 @@
 # Release history
 
-[Download releases](https://github.com/MysticEntry-Nova64/KaynShipwright/releases). Current stable: **2.0.0**. Earlier prototypes and the Studio preview are labeled prereleases. Historical releases preserve their limitations; they do not inherit current test results.
+[Download releases](https://github.com/MysticEntry-Nova64/KaynShipwright/releases). Current stable: **2.0.1**. Earlier prototypes and the Studio preview are labeled prereleases. Historical releases preserve their limitations; they do not inherit current test results.
 
 | Version | Change |
 | --- | --- |
+| [2.0.1](release-2.0.1.md) | State-specific mascot artwork and retained reliability fixes |
 | [2.0.0](release-2.0.0.md) | Studio release |
 | [1.3.0-studio.1](release-1.3.0-studio.1.md) | Studio preview |
 | [1.2.2](release-1.2.2.md) | Explicit close choices and bounded recovery |

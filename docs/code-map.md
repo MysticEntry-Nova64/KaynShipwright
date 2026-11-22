@@ -1,12 +1,12 @@
 # Code map: functions, triggers and ownership
 
-This is the navigation guide for 2.0.0. Links point to owning source files; search the named symbol rather than depending on line numbers that drift. “Pointer” below means a code reference or a canvas pointer event, not an exposed native address.
+This is the navigation guide for 2.0.1. Links point to owning source files; search the named symbol rather than depending on line numbers that drift. “Pointer” below means a code reference or a canvas pointer event, not an exposed native address.
 
 ## Entry points and module boundaries
 
 | Owner | Functions / entry points | Trigger and result |
 | --- | --- | --- |
-| [main.cjs](../main.cjs) | `activatePrimary`, `app.whenReady`, IPC registrations | Process startup acquires a single-instance lock and creates the sandboxed window. A second process focuses the first. Native handlers validate sender/input before dialogs or disk writes. |
+| [main.cjs](../main.cjs) | `activatePrimary`, `app.whenReady`, IPC registrations | Process startup acquires a single-instance lock and creates the sandboxed window. The opt-in hidden smoke flag requires a separate explicit absolute profile before locking; default startup remains visible. A second process focuses the first. Native handlers validate sender/input before dialogs or disk writes. |
 | [preload.cjs](../preload.cjs), [desktop-api.ts](../src/desktop-api.ts) | typed `window.desktop` bridge | Explicit IPC methods cross the renderer boundary. Renderer has no Node integration; new windows and navigation are denied. |
 | [editor.ts](../src/editor.ts) | `load`, `newDocument`, `commit`, `render`, `draw` | Coordinates active project, view and session. `commit` validates completed edits, advances history/revision and schedules recovery. New loads add independent documents. |
 | [studio-ui.ts](../src/studio-ui.ts) | `installStudioUI`, `refresh`, `filter`, `reviewState`, `fileState` | Layout selection, mount search, menus and export review. Host callbacks select mounts, redraw after layout changes and obtain export checks. This module never writes projects or owns history. Installed once per window. |
@@ -51,7 +51,7 @@ This is the navigation guide for 2.0.0. Links point to owning source files; sear
 
 ## UI source and extension rules
 
-[index.html](../index.html) owns semantic controls/dialogs; [style.css](../style.css) owns base surfaces; [studio.css](../studio.css) owns the Studio/focus shell. Keep control IDs unique. Focus grid selectors must override the existing workspace-panel `:has(...)` selector, including the minimum-width breakpoint. Close artwork is a static transparent asset; it owns no timer or listener.
+[index.html](../index.html) owns semantic controls/dialogs; [style.css](../style.css) owns base surfaces; [studio.css](../studio.css) owns the Studio/focus shell. Keep control IDs unique. Focus grid selectors must override the existing workspace-panel `:has(...)` selector, including the minimum-width breakpoint. Close artwork is a fixed transparent asset. The dialog-artwork helper owns image load/error listeners for decorative fallbacks only; it owns no timer, application action or preference.
 
 Keep model mutation inside the existing validation/history boundary. Add bridge operations explicitly rather than exposing Node to the renderer. Preserve session and pointer ownership across asynchronous work. Instance-lifetime listeners belong to their one window; a future remountable controller would need a matching disposal contract. Memory bounds by item count do not alone bound payload bytes.
 
@@ -59,4 +59,13 @@ I wanted the new shell to remain a small presentation module so the tested geome
 
 ## Verification pointers
 
+Follow [working standards](working-standards.md) when extending these paths. The focused
+`test:persistence` command includes seeded format preservation, controlled process-death
+saves and writer-to-disk recovery checks, alongside existing save/recovery contracts.
+
 `tests/*.test.ts`: domain/numerical rules, history/session ownership, staged IO and package/recovery behavior. `tests/studio-ui.cjs`: menus, search, keyboard selection, layout persistence and review-to-real-export. `geometry-ui.cjs`: tools, gestures, delayed save and package readback. `workspace-ui.cjs`: independent documents, partial batch failure/retry and restart. `close-ui.cjs`: recovery/clear failures and restart. `aim-contract.cjs` and `audit-regressions.cjs`: cancellation/settlement/ownership. `scaling-ui.cjs`: overflow rejection preserves export. `recovery-memory-ui.cjs`: real blocked-write heap retaining paths. `release-soak.cjs`: bounded repeated edits, resource counters and close layout. See [verification](verification.md) for scope and limits.
+
+Fixed location/close artwork is documented in [Dialog artwork](dialog-artwork.md).
+`dialog-artwork.ts` only supplies a text fallback for unavailable decorative
+images. Startup and close keep their existing action/focus owners. There is no
+appearance preference consumer, selector or project/recovery ownership here.

@@ -5,6 +5,31 @@ import {fromShip,toShip,validate,moveSlot,mirror,resize,slotPoints,parseProject}
 import type {Locations} from '../src/core.ts';
 const hull=JSON.parse(fs.readFileSync(new URL('../assets/verdant.ship',import.meta.url),'utf8'));
 const image='data:image/png;base64,AA==';
+
+test('seeded round trips preserve unknown fields, grouped mounts and optional-array presence',()=>{
+ const presenceMasks=new Set<number>(),groupSizes=new Set<number>();
+ for(const initialSeed of [7,88123,20261103,0xffffffff]){
+  let seed=initialSeed;
+  const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/0x100000000;};
+  for(let sample=0;sample<256;sample++){
+   const source=structuredClone(hull);
+   source.hullName=`Round trip ${initialSeed}:${sample} é 🚀`;
+   source.unknown={nested:[null,false,0,-0,random()*1e9,'水'],object:{preserve:sample}};
+   const groups=1+Math.floor(random()*8);
+   source.weaponSlots[0].locations=Array.from({length:2*groups},()=>Math.round((random()-.5)*2000));
+   source.weaponSlots[0].unknown={keep:['extra',sample]};
+   for(const [bit,key] of ['weaponSlots','engineSlots','bounds'].entries())if(sample&(1<<bit))delete source[key];
+   presenceMasks.add(sample&7);if(source.weaponSlots)groupSizes.add(groups);
+   const untouched=structuredClone(source),project=fromShip(source,image);
+   assert.deepEqual(validate(project).errors,[],`seed ${initialSeed}, sample ${sample}`);
+   // Expected wire data comes from source, not exporter output; JSON normalizes -0.
+   assert.deepEqual(toShip(parseProject(JSON.stringify(project))),JSON.parse(JSON.stringify(source)));
+   assert.deepEqual(source,untouched,'import/export must not mutate source data');
+  }
+ }
+ assert.deepEqual([...presenceMasks].sort((a,b)=>a-b),[0,1,2,3,4,5,6,7]);
+ assert.deepEqual([...groupSizes].sort((a,b)=>a-b),[1,2,3,4,5,6,7,8]);
+});
 test('optional absent arrays gain editor defaults without changing exported source fields',()=>{
  const source=structuredClone(hull);for(const key of ['weaponSlots','engineSlots','bounds'])delete source[key];
  const p=fromShip(source,image);assert.deepEqual(validate(p).errors,[]);assert.deepEqual(p.hull.weaponSlots,[]);assert.deepEqual(toShip(p),source);
